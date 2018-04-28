@@ -5,13 +5,15 @@ private String name;
 private String email;
 private String phone;
 private String address;
+private boolean favmarker;
 private int img;
 
-    public Contact(String name, String email, String phone, String address, int img) {
+    public Contact(String name, String email, String phone, String address, boolean favmarker, int img) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.favmarker = favmarker;
         this.img = img;
     }
 
@@ -45,6 +47,14 @@ private int img;
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isFavmarker() {
+        return favmarker;
+    }
+
+    public void setFavmarker(boolean favmarker) {
+        this.favmarker = favmarker;
     }
 
     public int getImg() {
