@@ -16,8 +16,8 @@ import java.util.List;
 
 public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContactAdapter.ContactViewHolder> {
 
-    Context context;
-    List<Contact> contactlist;
+
+    private List<Contact> contactlist;
 
 
     public RecyclerContactAdapter(List<Contact> contactlist) {
@@ -27,9 +27,9 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
     @NonNull
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(context).inflate(R.layout.contactcardview, parent,false);
-        ContactViewHolder viewHolder= new ContactViewHolder(view);
-        return viewHolder;
+        View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.contactcardview, parent,false);
+
+        return new ContactViewHolder(view);
     }
 
     @Override
