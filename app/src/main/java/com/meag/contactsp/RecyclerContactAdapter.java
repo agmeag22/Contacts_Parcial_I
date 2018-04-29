@@ -36,7 +36,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
     public void onBindViewHolder(RecyclerContactAdapter.ContactViewHolder holder, final int position) {
         final ImageButton favstar=holder.btnfav;
         holder.name.setText(contactlist.get(position).getName());
-        holder.img.setImageResource(contactlist.get(position).getImg());
+        holder.img.setImageURI(contactlist.get(position).getImg());
 
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favorite);
@@ -52,7 +52,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                     contactlist.get(position).setFavmarker(true);
                     favstar.setImageResource(R.drawable.ic_favorite);
                 }else{
-                    contactlist.get(position).setFavmarker(true);
+                    contactlist.get(position).setFavmarker(false);
                     favstar.setImageResource(R.drawable.ic_favoriteempty);
                 }
             }
