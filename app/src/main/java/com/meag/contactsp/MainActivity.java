@@ -1,77 +1,166 @@
 package com.meag.contactsp;
 
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.annotation.SuppressLint;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private RecyclerView rv;
+    private RecyclerContactAdapter adapterContact;
+    private RecyclerContactAdapter adapterContactfav;
+    private List<Contact> favcontactlist;
+    private LinearLayoutManager linearLayoutManager;
+    private List<Contact> contactList;
+    private ImageButton buttonselected;
+    private ImageButton buttonnonselected;
+    boolean button;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    private ViewPager mViewPager;
-
-
+    @SuppressLint({"ResourceAsColor", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        rv = findViewById(R.id.container);
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_contact);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_favorite);
+        linearLayoutManager=new GridLayoutManager(getApplicationContext(),3);
+        rv.setLayoutManager(linearLayoutManager);
+        contactList=new ArrayList<>();
+        contactList=fill_list();
+        adapterContact=new RecyclerContactAdapter(contactList);
+        rv.setAdapter(adapterContact);
+
+        button=false;
+        buttonselected= findViewById(R.id.tabselected);
+        buttonnonselected= findViewById(R.id.tabnonselected);
+        buttonselected.setImageResource(R.drawable.ic_contact);
+        buttonnonselected.setImageResource(R.drawable.ic_favorite);
+        buttonnonselected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(button==false){
+                    superior_to_inferior();
+                    button=true;
+                    favcontactlist=new ArrayList<>();
+                    for (Contact contact : contactList) {
+                        if (contact.isFavmarker()) {
+                            favcontactlist.add(contact);
+                        }
+                    }
+                    adapterContactfav=new RecyclerContactAdapter(favcontactlist);
+                    rv.setAdapter(adapterContactfav);
 
 
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-      fab.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                      .setAction("Action", null).show();
-          }
-      });
+                }else {
+                    inferior_to_superior();
+                    button = false;
+                    adapterContact=new RecyclerContactAdapter(contactList);
+                    rv.setAdapter(adapterContact);
+                }
+
+                }
+
+
+        });
+
+
 
     }
-
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment=null;
-            switch (position){
-                case 0: fragment=new FContact();
-                        break;
-
-                case 1: fragment=new Favorite();
-                        break;
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-
-            return 2;
-        }
+    public void superior_to_inferior(){
+        buttonselected.setImageResource(R.drawable.ic_favorite);
+        buttonnonselected.setImageResource(R.drawable.ic_contact);
+        buttonnonselected.setBackgroundResource(R.color.tabsuperior);
+        buttonselected.setBackgroundResource(R.color.tabinferior);
+    }
+    public void inferior_to_superior(){
+        buttonselected.setImageResource(R.drawable.ic_contact);
+        buttonnonselected.setImageResource(R.drawable.ic_favorite);
+        buttonnonselected.setBackgroundResource(R.color.tabinferior);
+        buttonselected.setBackgroundResource(R.color.tabsuperior);
     }
 
+    public List<Contact> fill_list(){
+        String name;
+        List<String> emails= new ArrayList<>(), numbers = new ArrayList<>();
+        List<Contact> contactlist = new ArrayList<>();
+        Uri image;
+        String id=new String();
+
+        // CURSOR PARAMS
+        String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC";
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        //SET CURSOR
+        Cursor phones = this.getContentResolver().query(uri, null, null, null, sort);
+        //MOVING
+        while (phones.moveToNext()) {
+            name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+            String nav = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+//            String Strt = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.STREET));
+//            String Cty = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CITY));
+//            String cntry = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY));
+//            String address= Strt+Cty+cntry;
+            if (nav != null) {
+                image = Uri.parse(nav);
+            } else image = null;
+
+
+            numbers = getPhoneNumbers(id);
+
+            emails = getEmails(id);
+
+            //Si la columna starred tiene 1 es que el contacto del telefono es favorito
+            boolean fav = (phones.getString(phones.getColumnIndex(ContactsContract.Data.STARRED))).equals("1");
+            //contactlist.add(new Contact(id,name,emails.toString(), numbers.toString(),address,fav,image));
+            contactlist.add(new Contact(id,name,null, null,null,fav,image));
+
+            Log.d("TAM", "findContacts: "+ contactlist.size());
+        }
+        phones.close();
+        return contactlist;
+    }
+
+    public List<String> getEmails(String id){
+        List<String> emails = new ArrayList<>();
+        Cursor cur1 = this.getContentResolver().query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
+                new String[]{id}, null);
+        while (cur1.moveToNext()) {
+            //to get the contact names
+            // String email2 = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DISPLAY_NAME));
+            String email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+
+            emails.add(email);
+        }
+        // Log.d( "emails-size: " , emails.size() + "");
+        cur1.close();
+        return emails;
+    }
+    public List<String> getPhoneNumbers(String id){
+        List<String> numbers = new ArrayList<>();
+        Cursor pCur = this.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+        while (pCur.moveToNext()) {
+            String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            numbers.add(contactNumber);
+            //Log.d("NUMBER_SIZE_INTERNO", "findContacts: " + numbers.size());
+            break;
+        }
+        //Log.d("NUMBER_SIZE", "findContacts: " + numbers.size());
+        pCur.close();
+        return numbers;
+    }
 }
