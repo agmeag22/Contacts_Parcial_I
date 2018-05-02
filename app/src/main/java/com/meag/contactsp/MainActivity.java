@@ -1,10 +1,13 @@
 package com.meag.contactsp;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,20 +28,25 @@ public class MainActivity extends AppCompatActivity {
     private List<Contact> contactList;
     private ImageButton buttonselected;
     private ImageButton buttonnonselected;
-    boolean button;
-
+    private boolean button;
+    private FloatingActionButton btnaddcontact;
+    private Context context;
     @SuppressLint({"ResourceAsColor", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        contactList=new ArrayList<>();
+        contactList=fill_list();
         rv = findViewById(R.id.container);
+
+
+
+
 
         linearLayoutManager=new GridLayoutManager(getApplicationContext(),3);
         rv.setLayoutManager(linearLayoutManager);
-        contactList=new ArrayList<>();
-        contactList=fill_list();
+
         adapterContact=new RecyclerContactAdapter(contactList);
         rv.setAdapter(adapterContact);
 
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         buttonnonselected= findViewById(R.id.tabnonselected);
         buttonselected.setImageResource(R.drawable.ic_contact);
         buttonnonselected.setImageResource(R.drawable.ic_favorite);
+
         buttonnonselected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
+//        btnaddcontact=findViewById(R.id.btnaddcontact);
+//        btnaddcontact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
 
 
@@ -109,10 +125,13 @@ public class MainActivity extends AppCompatActivity {
             name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
             String nav = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
-//            String Strt = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.STREET));
-//            String Cty = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CITY));
-//            String cntry = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY));
-//            String address= Strt+Cty+cntry;
+            String Strt = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.STREET));
+            String Cty = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CITY));
+            String cntry = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY));
+            String address=null;
+            if(Strt!=null && Cty!=null && cntry!=null ) {
+                address = Strt + "" + Cty + "" + cntry;
+            }
             if (nav != null) {
                 image = Uri.parse(nav);
             } else image = null;
@@ -124,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Si la columna starred tiene 1 es que el contacto del telefono es favorito
             boolean fav = (phones.getString(phones.getColumnIndex(ContactsContract.Data.STARRED))).equals("1");
-            //contactlist.add(new Contact(id,name,emails.toString(), numbers.toString(),address,fav,image));
-            contactlist.add(new Contact(id,name,null, null,null,fav,image));
+            contactlist.add(new Contact(id,name,emails.toString(), numbers.toString(),address,fav,image));
 
             Log.d("TAM", "findContacts: "+ contactlist.size());
         }
@@ -162,5 +180,45 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("NUMBER_SIZE", "findContacts: " + numbers.size());
         pCur.close();
         return numbers;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        buttonnonselected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(button==false){
+                    superior_to_inferior();
+                    button=true;
+                    favcontactlist=new ArrayList<>();
+                    for (Contact contact : contactList) {
+                        if (contact.isFavmarker()) {
+                            favcontactlist.add(contact);
+                        }
+                    }
+                    adapterContactfav=new RecyclerContactAdapter(favcontactlist);
+                    rv.setAdapter(adapterContactfav);
+
+
+
+                }else {
+                    inferior_to_superior();
+                    button = false;
+                    adapterContact=new RecyclerContactAdapter(contactList);
+                    rv.setAdapter(adapterContact);
+                }
+
+            }
+
+
+        });
+//        btnaddcontact=findViewById(R.id.btnaddcontact);
+//        btnaddcontact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
 }

@@ -1,5 +1,11 @@
 package com.meag.contactsp;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,12 +19,9 @@ import java.util.List;
 
 public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContactAdapter.ContactViewHolder> {
 
-
     private List<Contact> contactlist;
 
-
     public RecyclerContactAdapter(List<Contact> contactlist) {
-
         this.contactlist = contactlist;
     }
 
@@ -58,16 +61,23 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                 }
             }
         });
-//        holder.img.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                abstras(contactlist.get(position));
-//                Intent intent;
-//                intent = new Intent(getA,Contact_Description.class);
-//                startActivity(intent);
-//            }
-//
-//        });
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(v.getContext(),Description_Contact.class);
+                Uri uri=contactlist.get(position).getImg();
+                if(uri!=null) {
+//                    Uri.parse("res:///" + R.drawable.ic_person);
+                    intent.putExtra("image",uri.toString());
+                }
+                intent.putExtra("name",contactlist.get(position).getName());
+                intent.putExtra("email",contactlist.get(position).getEmail());
+                intent.putExtra("phone",contactlist.get(position).getPhone());
+                intent.putExtra("address",contactlist.get(position).getAddress());
+
+                ((Activity) v.getContext()).startActivityForResult(intent, 0);
+            }
+        });
 
 
     }
