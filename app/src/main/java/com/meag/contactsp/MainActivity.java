@@ -1,13 +1,16 @@
 package com.meag.contactsp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean button;
     private FloatingActionButton btnaddcontact;
     private Context context;
-    @SuppressLint({"ResourceAsColor", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         contactList=new ArrayList<>();
         contactList=fill_list();
+        context=this;
         rv = findViewById(R.id.container);
-
-
-
-
-
         linearLayoutManager=new GridLayoutManager(getApplicationContext(),3);
         rv.setLayoutManager(linearLayoutManager);
 
@@ -59,42 +58,57 @@ public class MainActivity extends AppCompatActivity {
         buttonnonselected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(button==false){
-                    superior_to_inferior();
-                    button=true;
-                    favcontactlist=new ArrayList<>();
-                    for (Contact contact : contactList) {
-                        if (contact.isFavmarker()) {
-                            favcontactlist.add(contact);
-                        }
-                    }
-                    adapterContactfav=new RecyclerContactAdapter(favcontactlist);
-                    rv.setAdapter(adapterContactfav);
-
-
-
-                }else {
-                    inferior_to_superior();
-                    button = false;
-                    adapterContact=new RecyclerContactAdapter(contactList);
-                    rv.setAdapter(adapterContact);
-                }
-
-                }
-
-
+                changer();
+            }
         });
-//        btnaddcontact=findViewById(R.id.btnaddcontact);
-//        btnaddcontact.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(MainActivity.this,CreateContact.class);
+                startActivityForResult(intent,1);
+            }
+        });
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage(R.string.exit_question)
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
+    }
+    public void changer() {
+        if (button == false) {
+            superior_to_inferior();
+            button = true;
+            favcontactlist = new ArrayList<>();
+            for (Contact contact : contactList) {
+                if (contact.isFavmarker()) {
+                    favcontactlist.add(contact);
+                }
+            }
+            adapterContactfav = new RecyclerContactAdapter(favcontactlist);
+            rv.setAdapter(adapterContactfav);
+
+
+        } else {
+            inferior_to_superior();
+            button = false;
+            adapterContact = new RecyclerContactAdapter(contactList);
+            rv.setAdapter(adapterContact);
+        }
+    }
+
     public void superior_to_inferior(){
         buttonselected.setImageResource(R.drawable.ic_favorite);
         buttonnonselected.setImageResource(R.drawable.ic_contact);
@@ -185,40 +199,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        buttonnonselected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(button==false){
-                    superior_to_inferior();
-                    button=true;
-                    favcontactlist=new ArrayList<>();
-                    for (Contact contact : contactList) {
-                        if (contact.isFavmarker()) {
-                            favcontactlist.add(contact);
-                        }
-                    }
-                    adapterContactfav=new RecyclerContactAdapter(favcontactlist);
-                    rv.setAdapter(adapterContactfav);
+        // check that it is the SecondActivity with an OK result
+        if(requestCode==1) {
+            if (resultCode== RESULT_OK) {
+                String newid = data.getStringExtra("id");
+                String newname = data.getStringExtra("name");
+                String newemail = data.getStringExtra("email");
+                String newphone = data.getStringExtra("phone");
+                String newaddress = data.getStringExtra("address");
+                Boolean newfav = Boolean.parseBoolean(data.getStringExtra("fav"));
+                Uri newimage = Uri.parse(data.getStringExtra("image"));
 
-
-
-                }else {
-                    inferior_to_superior();
-                    button = false;
-                    adapterContact=new RecyclerContactAdapter(contactList);
-                    rv.setAdapter(adapterContact);
-                }
-
+                contactList.add(new Contact(newid, newname, newemail, newphone, newaddress, newfav, newimage));
+                Toast.makeText(context, newname, Toast.LENGTH_SHORT).show();
+                adapterContact.notifyItemInserted(contactList.size());
+                adapterContact.notifyDataSetChanged();
             }
-
-
-        });
-//        btnaddcontact=findViewById(R.id.btnaddcontact);
-//        btnaddcontact.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        }
     }
-}
+    }
+
+
+

@@ -11,18 +11,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContactAdapter.ContactViewHolder> {
+public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContactAdapter.ContactViewHolder> implements Filterable {
 
-    private List<Contact> contactlist;
+    ContactFilter filter;
+    public List<Contact> contactlist;
+    public List<Contact> filteredlist;
 
     public RecyclerContactAdapter(List<Contact> contactlist) {
         this.contactlist = contactlist;
+        this.filteredlist=contactlist;
     }
 
     @NonNull
@@ -40,7 +45,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(contactlist.get(position).getImg());
         }else{
-            holder.img.setImageResource(R.drawable.ic_person);
+            holder.img.setImageResource(R.drawable.person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);
@@ -49,7 +54,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             holder.btnfav.setImageResource(R.drawable.ic_favoriteempty);
         }
 
-        holder.btnfav.setOnClickListener(new View.OnClickListener() {
+        holder.btnfav.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!contactlist.get(position).isFavmarker()){
@@ -67,7 +72,8 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                 Intent intent=new Intent(v.getContext(),Description_Contact.class);
                 Uri uri=contactlist.get(position).getImg();
                 if(uri!=null) {
-//                    Uri.parse("res:///" + R.drawable.ic_person);
+//
+
                     intent.putExtra("image",uri.toString());
                 }
                 intent.putExtra("name",contactlist.get(position).getName());
@@ -85,6 +91,14 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
     @Override
     public int getItemCount() {
         return contactlist.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (filter == null) {
+            filter = new ContactFilter(this, contactlist);
+        }
+        return filter;
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {

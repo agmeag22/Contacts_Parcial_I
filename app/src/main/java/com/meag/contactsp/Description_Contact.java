@@ -50,7 +50,7 @@ public class Description_Contact extends AppCompatActivity {
             Uri uri=Uri.parse(bundle.getString("image"));
             img.setImageURI(uri);
         }else{
-            img.setImageResource(R.drawable.ic_person);
+            img.setImageResource(R.drawable.person);
         }
         if(bundle.getCharSequence("name")!=null){
         name.setText(bundle.getCharSequence("name"));}

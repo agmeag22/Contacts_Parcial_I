@@ -24,6 +24,10 @@
         <activity
             android:name=".Description_Contact"
             android:label="@string/title_activity_description__contact"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateContact"
+            android:label="@string/title_activity_create_contact"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

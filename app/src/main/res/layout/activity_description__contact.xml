@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".Description_Contact"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/whatsapp_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_height="150dp"
             android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:background="#00ffffff"
+            android:background="@android:color/transparent"
              />
 
         <TextView

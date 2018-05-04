@@ -1,10 +1,12 @@
 package com.meag.contactsp;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 
-public class Contact implements Serializable{
+public class Contact implements Parcelable{
     private String id;
     private String name;
     private String email;
@@ -22,6 +24,28 @@ public class Contact implements Serializable{
         this.favmarker = favmarker;
         this.img = img;
     }
+
+    protected Contact(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        favmarker = in.readByte() != 0;
+        img = in.readParcelable(Uri.class.getClassLoader());
+    }
+
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
+        @Override
+        public Contact createFromParcel(Parcel in) {
+            return new Contact(in);
+        }
+
+        @Override
+        public Contact[] newArray(int size) {
+            return new Contact[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -77,5 +101,23 @@ public class Contact implements Serializable{
 
     public void setImg(Uri img) {
         this.img = img;
+    }
+
+
+    @Override
+    public int describeContents() {
+
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeByte((byte) (favmarker ? 1 : 0));
+        dest.writeParcelable(img, flags);
     }
 }
