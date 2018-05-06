@@ -23,10 +23,11 @@
             android:id="@+id/favchecker"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_below="@+id/create_imageview_descrpition"
-            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/text_view_name"
+            android:layout_marginLeft="20dp"
             android:background="@android:color/transparent"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_favoriteempty" />
 
         <TextView
             android:id="@+id/text_view_name"
@@ -133,6 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_phone"
+            android:inputType="phone"
             style="@style/CustomforEditText"/>
         <Button
             android:id="@+id/btnadd"

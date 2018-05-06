@@ -55,7 +55,7 @@
                 android:layout_marginBottom="3dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/whatsapp" />
+                android:src="@mipmap/ic_whatsapp" />
             </LinearLayout>
         </LinearLayout>
 

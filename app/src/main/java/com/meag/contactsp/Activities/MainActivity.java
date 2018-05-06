@@ -1,6 +1,5 @@
 package com.meag.contactsp.Activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,11 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.meag.contactsp.Adapters.RecyclerContactAdapter;
+import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
 import com.meag.contactsp.FMainLandscape;
 import com.meag.contactsp.Methods.Contact_Obtain;
 import com.meag.contactsp.Objects.Contact;
@@ -42,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     private TabLayout tabLayout;
     private SearchView searchView;
     private Contact_Obtain class_contact =new Contact_Obtain(this);
+    RecyclerContactAdapterLand adapterContactland,adapteContactfavLand;
     FMainLandscape fMainLandscape;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +48,211 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         if (savedInstanceState == null) {
 
 
+            contactList = new ArrayList<>();
+            contactList = class_contact.findContacts();
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-          if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-              contactList = new ArrayList<>();
-              contactList = class_contact.findContacts();
-              context = this;
-              rv = findViewById(R.id.container);
-              linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
-              rv.setLayoutManager(linearLayoutManager);
-              adapterContact = new RecyclerContactAdapter(contactList);
-              rv.setAdapter(adapterContact);
-              searchView = findViewById(R.id.search_view);
-              tabLayout = findViewById(R.id.tablayout);
-              tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                context = this;
+                rv = findViewById(R.id.container);
+                linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                rv.setLayoutManager(linearLayoutManager);
+                adapterContact = new RecyclerContactAdapter(contactList);
+                rv.setAdapter(adapterContact);
+                searchView = findViewById(R.id.search_view);
+                tabLayout = findViewById(R.id.tablayout);
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        switch (tab.getPosition()) {
+                            case 0:
+
+                                adapterContact = new RecyclerContactAdapter(contactList);
+                                rv.setAdapter(adapterContact);
+                                break;
+                            case 1:
+                                favcontactlist = new ArrayList<>();
+                                for (Contact contact : contactList) {
+                                    if (contact.isFavmarker()) {
+                                        favcontactlist.add(contact);
+                                    }
+                                }
+                                adapterContactfav = new RecyclerContactAdapter(favcontactlist);
+                                rv.setAdapter(adapterContactfav);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        switch (tabLayout.getSelectedTabPosition()) {
+                            case 0:
+                                adapterContact.getFilter().filter(newText);
+                                break;
+                            case 1:
+                                adapterContactfav.getFilter().filter(newText);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+
+                FloatingActionButton fab = findViewById(R.id.fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                        startActivityForResult(intent, 1);
+                    }
+                });
+            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                rv = findViewById(R.id.container);
+                linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                rv.setLayoutManager(linearLayoutManager);
+                adapterContactland = new RecyclerContactAdapterLand(contactList);
+                rv.setAdapter(adapterContactland);
+                searchView = findViewById(R.id.search_view);
+                tabLayout = findViewById(R.id.tablayout);
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        switch (tab.getPosition()) {
+                            case 0:
+
+                                adapterContactland = new RecyclerContactAdapterLand(contactList);
+                                rv.setAdapter(adapterContactland);
+                                break;
+                            case 1:
+                                favcontactlist = new ArrayList<>();
+                                for (Contact contact : contactList) {
+                                    if (contact.isFavmarker()) {
+                                        favcontactlist.add(contact);
+                                    }
+                                }
+                                adapteContactfavLand = new RecyclerContactAdapterLand(favcontactlist);
+                                rv.setAdapter(adapteContactfavLand);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        switch (tabLayout.getSelectedTabPosition()) {
+                            case 0:
+                                adapterContactland.getFilter().filter(newText);
+                                break;
+                            case 1:
+                                adapteContactfavLand.getFilter().filter(newText);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+
+                FloatingActionButton fab = findViewById(R.id.fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                        startActivityForResult(intent, 1);
+                    }
+                });
+
+//            Bundle bundle=new Bundle();
+//            bundle.putSerializable("list", (Serializable) contactList);
+//            fMainLandscape=new FMainLandscape();
+//            fMainLandscape.setArguments(bundle);
+//            FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
+//            transition.replace(R.id.frame1,fMainLandscape);
+//            transition.addToBackStack(null);
+//            transition.commit();
+            }
+            } else{
+            onRestoreInstanceState(savedInstanceState);
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage(R.string.exit_question)
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+////            for (Fragment fragment:getSupportFragmentManager().getFragments()) {
+////                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+////            }
+//        }
+        if(rv!=null){
+            Parcelable recyclerstate=rv.getLayoutManager().onSaveInstanceState();
+            savedInstanceState.putParcelable("rv",recyclerstate);}
+
+        savedInstanceState.putSerializable("list", (Serializable) contactList);
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        LinearLayoutManager.SavedState recyclerstate=savedInstanceState.getParcelable("rv");
+        LinearLayoutManager.SavedState recyclerstateland=savedInstanceState.getParcelable("rv");
+
+        contactList = (List<Contact>) savedInstanceState.getSerializable("list");
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rv = findViewById(R.id.container);
+            linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+            rv.setLayoutManager(linearLayoutManager);
+            adapterContact = new RecyclerContactAdapter(contactList);
+            rv.setAdapter(adapterContact);
+            searchView = findViewById(R.id.search_view);
+            tabLayout = findViewById(R.id.tablayout);
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     switch (tab.getPosition()) {
@@ -94,168 +284,110 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 
                 }
             });
-              searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                  @Override
-                  public boolean onQueryTextSubmit(String query) {
-                      return false;
-                  }
-
-                  @Override
-                  public boolean onQueryTextChange(String newText) {
-                      switch (tabLayout.getSelectedTabPosition()) {
-                          case 0:
-                              adapterContact.getFilter().filter(newText);
-                              break;
-                          case 1:
-                              adapterContactfav.getFilter().filter(newText);
-                              break;
-                      }
-                      return false;
-                  }
-              });
-
-
-              FloatingActionButton fab = findViewById(R.id.fab);
-              fab.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
-                      Intent intent = new Intent(MainActivity.this, CreateContact.class);
-                      startActivityForResult(intent, 1);
-                  }
-              });
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-              contactList = new ArrayList<>();
-              contactList = class_contact.findContacts();
-              Bundle bundle=new Bundle();
-                bundle.putSerializable("list", (Serializable) contactList);
-                fMainLandscape=new FMainLandscape();
-                fMainLandscape.setArguments(bundle);
-                FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
-                transition.replace(R.id.frame1,fMainLandscape);
-                transition.addToBackStack(null);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
                 }
 
-
-
-    }else{
-            onRestoreInstanceState(savedInstanceState);
-    }
-
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage(R.string.exit_question)
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        MainActivity.super.onBackPressed();
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    switch (tabLayout.getSelectedTabPosition()) {
+                        case 0:
+                            adapterContact.getFilter().filter(newText);
+                            break;
+                        case 1:
+                            adapterContactfav.getFilter().filter(newText);
+                            break;
                     }
-                }).create().show();
-    }
+                    return false;
+                }
+            });
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-        Parcelable recyclerstate=rv.getLayoutManager().onSaveInstanceState();
-        savedInstanceState.putParcelable("rv",recyclerstate);
-        savedInstanceState.putSerializable("list", (Serializable) contactList);}
-        super.onSaveInstanceState(savedInstanceState);
 
-    }
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        LinearLayoutManager.SavedState recyclerstate=savedInstanceState.getParcelable("rv");
-        contactList = (List<Contact>) savedInstanceState.getSerializable("list");
+            FloatingActionButton fab = findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                    startActivityForResult(intent, 1);
+                }
+            });
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                rv = findViewById(R.id.container);
-                linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
-                rv.setLayoutManager(linearLayoutManager);
-                adapterContact = new RecyclerContactAdapter(contactList);
-                rv.setAdapter(adapterContact);
-                searchView = findViewById(R.id.search_view);
-                tabLayout = findViewById(R.id.tablayout);
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
+            if( recyclerstate != null) rv.getLayoutManager().onRestoreInstanceState(recyclerstate);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rv = findViewById(R.id.container);
+            linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            rv.setLayoutManager(linearLayoutManager);
+            adapterContactland = new RecyclerContactAdapterLand(contactList);
+            rv.setAdapter(adapterContactland);
+            searchView = findViewById(R.id.search_view);
+            tabLayout = findViewById(R.id.tablayout);
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    switch (tab.getPosition()) {
+                        case 0:
 
-                        adapterContact = new RecyclerContactAdapter(contactList);
-                        rv.setAdapter(adapterContact);
-                        break;
-                    case 1:
-                        favcontactlist = new ArrayList<>();
-                        for (Contact contact : contactList) {
-                            if (contact.isFavmarker()) {
-                                favcontactlist.add(contact);
+                            adapterContactland = new RecyclerContactAdapterLand(contactList);
+                            rv.setAdapter(adapterContactland);
+                            break;
+                        case 1:
+                            favcontactlist = new ArrayList<>();
+                            for (Contact contact : contactList) {
+                                if (contact.isFavmarker()) {
+                                    favcontactlist.add(contact);
+                                }
                             }
-                        }
-                        adapterContactfav = new RecyclerContactAdapter(favcontactlist);
-                        rv.setAdapter(adapterContactfav);
-                        break;
+                            adapteContactfavLand = new RecyclerContactAdapterLand(favcontactlist);
+                            rv.setAdapter(adapteContactfavLand);
+                            break;
+                    }
                 }
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
+                }
+            });
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    switch (tabLayout.getSelectedTabPosition()) {
+                        case 0:
+                            adapterContactland.getFilter().filter(newText);
+                            break;
+                        case 1:
+                            adapteContactfavLand.getFilter().filter(newText);
+                            break;
                     }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        switch (tabLayout.getSelectedTabPosition()) {
-                            case 0:
-                                adapterContact.getFilter().filter(newText);
-                                break;
-                            case 1:
-                                adapterContactfav.getFilter().filter(newText);
-                                break;
-                        }
-                        return false;
-                    }
-                });
+                    return false;
+                }
+            });
 
 
-                FloatingActionButton fab = findViewById(R.id.fab);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MainActivity.this, CreateContact.class);
-                        startActivityForResult(intent, 1);
-                    }
-                });
+            FloatingActionButton fab = findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                    startActivityForResult(intent, 1);
+                }
+            });
 
+            if( recyclerstate != null) rv.getLayoutManager().onRestoreInstanceState(recyclerstate);
+        }
 
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("list", (Serializable) contactList);
-                fMainLandscape=new FMainLandscape();
-                fMainLandscape.setArguments(bundle);
-                FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
-                transition.replace(R.id.frame1,fMainLandscape);
-                transition.addToBackStack(null);
-
-            }
-        if( recyclerstate != null) rv.getLayoutManager().onRestoreInstanceState(recyclerstate);
 
 
 
@@ -288,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             }
         }
     }
-    }
+}
 
 
 

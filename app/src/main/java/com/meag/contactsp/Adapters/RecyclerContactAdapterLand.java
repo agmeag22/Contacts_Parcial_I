@@ -16,6 +16,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.meag.contactsp.Activities.Description_Contact;
@@ -52,7 +53,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
-            holder.img.setImageResource(R.drawable.ic_person);
+            holder.img.setImageResource(R.mipmap.person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);
@@ -61,6 +62,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
             holder.btnfav.setImageResource(R.drawable.ic_favoriteempty);
         }
         if(contactlist.get(position).getPhone().size()>0){
+            holder.btncall.setImageResource(R.drawable.ic_call2);
             holder.phone.setText(contactlist.get(position).getPhone().get(0));
         }
 
@@ -76,7 +78,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
                 }
             }
         });
-        holder.img.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(v.getContext(),Description_Contact.class);
@@ -87,7 +89,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
                     ((Activity) v.getContext()).startActivityForResult(intent, 0);
             }
         });
-        holder.phone.setOnClickListener(new View.OnClickListener() {
+        holder.btncall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactlist.get(position).getPhone().get(0)));
@@ -127,6 +129,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         ImageView img;
         ImageButton btnfav;
         ImageButton btncall;
+        LinearLayout linearLayout;
 
         public ContactViewHolder(View itemView) {
             super(itemView);
@@ -136,6 +139,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
             img = itemView.findViewById(R.id.cardpicture_imageviewland);
             btnfav = itemView.findViewById(R.id.btnfavland);
             btncall=itemView.findViewById(R.id.btncallland);
+            linearLayout=itemView.findViewById(R.id.cardviewlinearl);
 
         }
     }

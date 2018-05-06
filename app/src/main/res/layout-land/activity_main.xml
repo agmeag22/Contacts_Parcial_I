@@ -11,19 +11,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <FrameLayout
-            android:id="@+id/frame1"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            />
+            android:orientation="vertical">
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                style="@style/SearchViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cardview_shadow_start_color">
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabcontact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_contact" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabfavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_favorite" />
+
+            </android.support.design.widget.TabLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
 
         <FrameLayout
             android:id="@+id/frame2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"/>
+            android:layout_weight="1"/>
     </LinearLayout>
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+        android:src="@mipmap/ic_add" />
 
 </android.support.design.widget.CoordinatorLayout>

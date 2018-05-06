@@ -53,7 +53,7 @@ public class Description_Contact extends AppCompatActivity {
                 Uri uri=Uri.parse(contact.getImg());
                 img.setImageURI(uri);
             }else{
-                img.setImageResource(R.drawable.ic_person);
+                img.setImageResource(R.mipmap.person);
             }
             if(contact.getName().size()>0){
                 name.setText(contact.getName().get(0));}

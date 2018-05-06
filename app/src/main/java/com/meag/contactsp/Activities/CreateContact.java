@@ -45,7 +45,7 @@ public class CreateContact extends AppCompatActivity {
         phone=findViewById(R.id.edit_text_phone);
         btnadd=findViewById(R.id.btnadd);
         btnfav=findViewById(R.id.favchecker);
-        image=Uri.parse("res:///" + R.drawable.ic_person);
+        image=Uri.parse("res:///" + R.mipmap.person);
         favmark=false;
 
 
