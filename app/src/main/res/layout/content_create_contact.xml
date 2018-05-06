@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CreateContact"
-    android:background="@drawable/whatsapp_background"
+    tools:context=".Activities.CreateContact"
+    android:background="@drawable/background"
     tools:showIn="@layout/activity_create_contact">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +25,7 @@
             android:layout_height="30dp"
             android:layout_below="@+id/create_imageview_descrpition"
             android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -43,10 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_name"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText"/>
 
         <TextView
             android:id="@+id/text_view_last_name"
@@ -64,10 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_last_name"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText"/>
 
         <TextView
             android:id="@+id/text_view_email"
@@ -85,10 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_email"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText" />
 
         <TextView
             android:id="@+id/text_view_address"
@@ -106,10 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_address"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText"/>
         <TextView
             android:id="@+id/text_view_id"
             android:layout_width="wrap_content"
@@ -126,10 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_id"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText"/>
 
         <TextView
             android:id="@+id/text_view_phone"
@@ -147,10 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_phone"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:hint="@string/createhintexample" />
+            style="@style/CustomforEditText"/>
         <Button
             android:id="@+id/btnadd"
             android:layout_width="wrap_content"

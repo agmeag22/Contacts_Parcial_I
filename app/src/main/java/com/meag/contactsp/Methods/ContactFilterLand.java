@@ -1,19 +1,21 @@
-package com.meag.contactsp;
+package com.meag.contactsp.Methods;
 
 import android.widget.Filter;
 
-
+import com.meag.contactsp.Adapters.RecyclerContactAdapter;
+import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
+import com.meag.contactsp.Objects.Contact;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactFilter extends Filter implements Serializable {
-    RecyclerContactAdapter adapter;
+public class ContactFilterLand extends Filter implements Serializable {
+    RecyclerContactAdapterLand adapter;
     List<Contact> filterList;
 
 
-    public ContactFilter(RecyclerContactAdapter adapter, List<Contact> filterList) {
+    public ContactFilterLand(RecyclerContactAdapterLand adapter, List<Contact> filterList) {
         this.adapter = adapter;
         this.filterList = filterList;
     }
@@ -32,12 +34,13 @@ public class ContactFilter extends Filter implements Serializable {
 
             for (int i = 0; i < filterList.size(); i++) {
                 //CHECK IF ONLY FAVS
-                if (filterList.get(i).getName().toUpperCase().contains(constraint)) {
-                    //ADD PLAYER TO FILTERED PLAYERS
-                    filteredContacts.add(filterList.get(i));
+                if (filterList.get(i).getName().get(0) != null) {
+                    if (filterList.get(i).getName().get(0).toUpperCase().contains(constraint)) {
+                        //ADD PLAYER TO FILTERED PLAYERS
+                        filteredContacts.add(filterList.get(i));
+                    }
                 }
             }
-
             results.count = filteredContacts.size();
             results.values = filteredContacts;
         } else {

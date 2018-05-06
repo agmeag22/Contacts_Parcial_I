@@ -1,11 +1,8 @@
-package com.meag.contactsp;
+package com.meag.contactsp.Adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +13,11 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.meag.contactsp.Methods.ContactFilter;
+import com.meag.contactsp.Activities.Description_Contact;
+import com.meag.contactsp.Objects.Contact;
+import com.meag.contactsp.R;
 
 import java.util.List;
 
@@ -41,11 +43,11 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
     @Override
     public void onBindViewHolder(RecyclerContactAdapter.ContactViewHolder holder, final int position) {
         final ImageButton favstar=holder.btnfav;
-        holder.name.setText(contactlist.get(position).getName());
+        holder.name.setText(contactlist.get(position).getName().get(0));
         if(contactlist.get(position).getImg()!=null) {
-            holder.img.setImageURI(contactlist.get(position).getImg());
+            holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
-            holder.img.setImageResource(R.drawable.person);
+            holder.img.setImageResource(R.drawable.ic_person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);
@@ -70,18 +72,11 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(v.getContext(),Description_Contact.class);
-                Uri uri=contactlist.get(position).getImg();
-                if(uri!=null) {
+
 //
+                    intent.putExtra("contactl", contactlist.get(position));
 
-                    intent.putExtra("image",uri.toString());
-                }
-                intent.putExtra("name",contactlist.get(position).getName());
-                intent.putExtra("email",contactlist.get(position).getEmail());
-                intent.putExtra("phone",contactlist.get(position).getPhone());
-                intent.putExtra("address",contactlist.get(position).getAddress());
-
-                ((Activity) v.getContext()).startActivityForResult(intent, 0);
+                    ((Activity) v.getContext()).startActivityForResult(intent, 0);
             }
         });
 

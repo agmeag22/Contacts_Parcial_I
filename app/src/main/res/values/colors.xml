@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tabsuperior">#303F9F</color>
-    <color name="tabinferior">#e12323</color>
+    <color name="tabinferior">#c8e11d1d</color>
     <color name="transparente">#00ffffff</color>
 
 </resources>

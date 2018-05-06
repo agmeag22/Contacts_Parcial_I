@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Description_Contact"
+    tools:context=".Activities.Description_Contact"
     android:orientation="vertical"
-    android:background="@drawable/whatsapp_background">
+    android:background="@drawable/background"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,94 +29,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/cardpicture_imageview_descrpition"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-             />
-
-        <TextView
-            android:id="@+id/nametext"
+        android:layout_weight="1">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/emailtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="#6b6b6b"
-            android:textStyle="bold"
-
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/phonetext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#6b6b6b"
-
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/addresstext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="#6b6b6b"
-
-            android:textAlignment="center"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            >
+            android:layout_height="match_parent">
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageButton
-                    android:id="@+id/button_whatsapp"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="fitCenter"
-                    android:background="#00ffffff"
-                    android:src="@drawable/whatsapp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageButton
-                    android:id="@+id/button_share"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="fitCenter"
-                    android:background="#00ffffff"
-                    android:src="@drawable/share"/>
+                android:orientation="vertical">
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/description_image_view"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:id="@+id/name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAlignment="center"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/birthday"
+                        />
+                    <TextView
+                        android:id="@+id/birthday_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginLeft="20dp"/>
+                </LinearLayout>
 
-
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/phonerecyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                </android.support.v7.widget.RecyclerView>
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
+
+
 
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.meag.contactsp;
+package com.meag.contactsp.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.meag.contactsp.R;
 
 import java.util.ArrayList;
 

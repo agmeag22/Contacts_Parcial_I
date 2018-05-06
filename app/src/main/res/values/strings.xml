@@ -17,4 +17,5 @@
     <string name="add">ADD</string>
     <string name="id">Id</string>
     <string name="phone">Phone</string>
+    <string name="birthday">Birthday:</string>
 </resources>
