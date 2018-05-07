@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".Activities.Description_Contact"
     android:orientation="vertical"
-    android:background="@drawable/background"
     >
 
     <LinearLayout
@@ -79,7 +78,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/white"
                         android:text="@string/birthday"
                         />
                     <TextView
@@ -87,8 +86,61 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/white"
+                        android:paddingLeft="15dp"
+                        android:background="@color/cardview_shadow_start_color"
+                        android:layout_marginLeft="3dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/addresstext"
+                        />
+                    <TextView
+                        android:id="@+id/addresstext"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:paddingLeft="15dp"
+                        android:background="@color/cardview_shadow_start_color"
+                        android:layout_marginLeft="3dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/emailtext"
+                        />
+                    <TextView
+                        android:id="@+id/email_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/white"
+                        android:background="@color/cardview_shadow_start_color"
                         android:layout_marginLeft="20dp"/>
+
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView

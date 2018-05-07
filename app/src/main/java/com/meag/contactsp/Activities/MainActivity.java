@@ -426,14 +426,16 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             }
         }else if(requestCode==0){
             if(resultCode==2){
-                Contact contactfordelete= (Contact) data.getSerializableExtra("contactindex");
-                int index=contactList.indexOf(contactfordelete);
+                int index= (int) data.getSerializableExtra("remove_contact_index");
                 contactList.remove(index);
+                adapterContact.contactlist.remove(index);
                 adapterContact.notifyItemRemoved(index);
                 adapterContact.notifyDataSetChanged();
-                adapterContactfav.notifyItemRemoved(index);
-                adapterContactfav.notifyDataSetChanged();
+                if(adapterContactfav!=null) {
 
+                    adapterContactfav.notifyItemRemoved(index);
+                    adapterContactfav.notifyDataSetChanged();
+                }
             }
         }
     }

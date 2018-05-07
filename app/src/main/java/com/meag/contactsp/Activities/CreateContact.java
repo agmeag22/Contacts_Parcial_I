@@ -36,7 +36,6 @@ public class CreateContact extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_contact);
-        id=findViewById(R.id.edit_text_id);
         name= findViewById(R.id.edit_text_name);
         lastname= findViewById(R.id.edit_text_last_name);
         email= findViewById(R.id.edit_text_email);
@@ -65,7 +64,7 @@ public class CreateContact extends AppCompatActivity {
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sid=id.getText().toString();
+                sid="0";
                 sname=name.getText().toString()+" "+lastname.getText().toString();
                 semail=String.valueOf(email.getText());
                 saddress=String.valueOf(address.getText());
@@ -77,7 +76,7 @@ public class CreateContact extends AppCompatActivity {
                 intent.putExtra("name",sname);
                 intent.putExtra("email",semail);
                 intent.putExtra("phone",sphone);
-                intent.putExtra("addrress",saddress);
+                intent.putExtra("address",saddress);
                 intent.putExtra("fav",favmark.toString());
                 intent.putExtra("image",image.toString());
 

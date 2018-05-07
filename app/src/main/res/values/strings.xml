@@ -18,4 +18,6 @@
     <string name="id">Id</string>
     <string name="phone">Phone</string>
     <string name="birthday">Birthday:</string>
+    <string name="emailtext">Email:</string>
+    <string name="addresstext">Address:</string>
 </resources>

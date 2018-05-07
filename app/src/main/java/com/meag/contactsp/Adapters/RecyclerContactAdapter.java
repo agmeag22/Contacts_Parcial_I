@@ -73,8 +73,9 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(v.getContext(),Description_Contact.class);
-                    int index=contactlist.indexOf(position);
-//
+                    int index= position;
+
+                    intent.putExtra("index",index);
                     intent.putExtra("contactl", contactlist.get(position));
 
                     ((Activity) v.getContext()).startActivityForResult(intent, 0);

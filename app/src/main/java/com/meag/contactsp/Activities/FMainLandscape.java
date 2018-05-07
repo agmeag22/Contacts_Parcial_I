@@ -1,9 +1,10 @@
-package com.meag.contactsp;
+package com.meag.contactsp.Activities;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.meag.contactsp.Activities.MainActivity;
 import com.meag.contactsp.Adapters.PhoneAdapter;
 import com.meag.contactsp.Objects.Contact;
+import com.meag.contactsp.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,10 +38,9 @@ public class FMainLandscape extends Fragment {
     private RecyclerView rv;
     private PhoneAdapter phoneAdapter;
     private ImageView img;
-    private TextView name;
     private ImageButton back;
-    TextView birthday;
-    private TextView phone;
+    private TextView name,birthday,email,address;
+
     Contact contact;
     ImageButton button_delete;
 
@@ -77,41 +77,42 @@ public class FMainLandscape extends Fragment {
         img = v.findViewById(R.id.description_image_view);
         back=v.findViewById(R.id.btnback);
         name = v.findViewById(R.id.name_text);
-        birthday = v.findViewById(R.id.birthday_text);
+        img= v.findViewById(R.id.description_image_view);
+        name=v.findViewById(R.id.name_text);
+        birthday=v.findViewById(R.id.birthday_text);
+        email=v.findViewById(R.id.email_text);
+        address=v.findViewById(R.id.addresstext);
         button_delete=v.findViewById(R.id.btn_delete);
 //        address=findViewById(R.id.addresstext);
         linearLayoutManager = new LinearLayoutManager(this.getContext());
         rv.setLayoutManager(linearLayoutManager);
 
         if (contact != null) {
-            if (contact.getImg() != null) {
-                Uri uri = Uri.parse(contact.getImg());
-                img.setImageURI(uri);
-            } else {
-                img.setImageResource(R.drawable.person);
-            }
-            if (contact.getName().size() > 0) {
-                name.setText(contact.getName().get(0));
-            } else {
-                name.setText("-");
-            }
-//            if(contact.getEmail().size()>0){
-//                email.setText(contact.getEmail().get(0));}
-//            else {email.setText("-");}
-            if (contact.getPhone().size() > 0) {
-                String phonestring = new ArrayList<String>(contact.getPhone().values()).get(0);
-                phoneAdapter = new PhoneAdapter(this.getContext(), contact.getPhone());
-                rv.setAdapter(phoneAdapter);
-            } else {
-                phone.setText("-");
-            }
-//            if(contact.getAddress()!=null){
-//                address.setText(contact.getAddress());}
-//            else {address.setText("-");}
-            if (contact.getBirthdate() != null) {
+            if(contact.getImg()!=null){
+                Uri uri=Uri.parse(contact.getImg());
+                img.setImageURI(uri);}
+            else{
+                img.setImageResource(R.drawable.person); }
+
+            if(contact.getName().size()>0){
+                name.setText(contact.getName().get(0));}
+
+            if(contact.getEmail().size()>0){
+                email.setText(contact.getEmail().get(0));}
+
+            if(contact.getPhone().size()>0) {
+                String phonestring=new ArrayList<String>(contact.getPhone().values()).get(0);
+                phoneAdapter=new PhoneAdapter(this.getContext(),contact.getPhone());
+                rv.setAdapter(phoneAdapter); }
+
+            if(contact.getAddress()!=null){
+                address.setText(contact.getAddress());}
+
+            if(contact.getBirthdate()!=null){
                 birthday.setText(contact.getBirthdate().toString());
             }
         }
+        final FMainLandscape fMainLandscape=this;
         button_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +121,7 @@ public class FMainLandscape extends Fragment {
                 main.getContactList().remove(contact);
                 main.getAdapterContactland().notifyItemRemoved(index);
                 main.getAdapterContactland().notifyDataSetChanged();
-
-                getActivity().getSupportFragmentManager().popBackStack();
-
+                getActivity().getSupportFragmentManager().beginTransaction().remove(fMainLandscape).commit();
             }
         });
         return v;

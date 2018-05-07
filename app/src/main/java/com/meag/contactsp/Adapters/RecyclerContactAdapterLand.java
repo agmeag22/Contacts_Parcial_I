@@ -18,8 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.meag.contactsp.Activities.MainActivity;
-import com.meag.contactsp.FMainLandscape;
+import com.meag.contactsp.Activities.FMainLandscape;
 import com.meag.contactsp.Methods.ContactFilterLand;
 import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
