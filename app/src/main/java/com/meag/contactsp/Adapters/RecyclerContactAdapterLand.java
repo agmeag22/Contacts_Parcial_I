@@ -1,13 +1,12 @@
 package com.meag.contactsp.Adapters;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.meag.contactsp.Activities.Description_Contact;
+import com.meag.contactsp.FMainLandscape;
 import com.meag.contactsp.Methods.ContactFilterLand;
 import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerContactAdapterLand.ContactViewHolder> implements Filterable {
@@ -32,10 +32,14 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
     public List<Contact> contactlist;
     public List<Contact> filteredlist;
 
-    public RecyclerContactAdapterLand(List<Contact> contactlist) {
+    FMainLandscape fMainLandscape;
+    AppCompatActivity activity;
+
+    public RecyclerContactAdapterLand(AppCompatActivity activity,List<Contact> contactlist) {
         this.context = context;
         this.contactlist = contactlist;
         this.filteredlist = contactlist;
+        this.activity=activity;
     }
 
     @NonNull
@@ -50,6 +54,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
     public void onBindViewHolder(RecyclerContactAdapterLand.ContactViewHolder holder, final int position) {
         final ImageButton favstar=holder.btnfav;
         holder.name.setText(contactlist.get(position).getName().get(0));
+
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
@@ -60,10 +65,6 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         }
         else{
             holder.btnfav.setImageResource(R.drawable.ic_favoriteempty);
-        }
-        if(contactlist.get(position).getPhone().size()>0){
-            holder.btncall.setImageResource(R.drawable.ic_call2);
-            holder.phone.setText(contactlist.get(position).getPhone().get(0));
         }
 
         holder.btnfav.setOnClickListener( new View.OnClickListener() {
@@ -81,31 +82,20 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(v.getContext(),Description_Contact.class);
-
+//                Intent intent=new Intent(v.getContext(),Description_Contact.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("list", (Serializable) contactlist.get(position));
+                fMainLandscape=new FMainLandscape();
+                fMainLandscape.setArguments(bundle);
+                FragmentTransaction transaction= activity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame2, fMainLandscape).commit();
 //
-                    intent.putExtra("contactl", contactlist.get(position));
+//                    intent.putExtra("contactl", contactlist.get(position));
+//
+//                    ((Activity) v.getContext()).startActivityForResult(intent, 0);
+            }
+        });
 
-                    ((Activity) v.getContext()).startActivityForResult(intent, 0);
-            }
-        });
-        holder.btncall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactlist.get(position).getPhone().get(0)));
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                context.startActivity(intent);
-            }
-        });
 
 
     }
@@ -125,23 +115,20 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        TextView phone;
         ImageView img;
         ImageButton btnfav;
-        ImageButton btncall;
         LinearLayout linearLayout;
 
         public ContactViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.cardname_textviewland);
-            phone = itemView.findViewById(R.id.cardphone_textviewland);
 
             img = itemView.findViewById(R.id.cardpicture_imageviewland);
             btnfav = itemView.findViewById(R.id.btnfavland);
-            btncall=itemView.findViewById(R.id.btncallland);
             linearLayout=itemView.findViewById(R.id.cardviewlinearl);
 
         }
     }
+
 //    public abstract void abstras(Contact c);
 }

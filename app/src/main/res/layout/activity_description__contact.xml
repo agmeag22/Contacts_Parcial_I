@@ -12,9 +12,10 @@
     >
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimaryDark">
+        >
         <ImageButton
             android:id="@+id/btnback"
             android:layout_width="50dp"
@@ -23,7 +24,7 @@
             android:layout_marginLeft="8dp"
             android:background="#00ffffff"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_revert"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +82,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin">
+
                 </android.support.v7.widget.RecyclerView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"></LinearLayout>
             </LinearLayout>
 
         </ScrollView>

@@ -1,5 +1,6 @@
 package com.meag.contactsp.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,11 +41,12 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     private SearchView searchView;
     private Contact_Obtain class_contact =new Contact_Obtain(this);
     RecyclerContactAdapterLand adapterContactland,adapteContactfavLand;
-    FMainLandscape fMainLandscape;
+    AppCompatActivity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (savedInstanceState == null) {
 
 
@@ -122,10 +124,11 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                     }
                 });
             } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                activity=this;
                 rv = findViewById(R.id.container);
-                linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager = new LinearLayoutManager(context);
                 rv.setLayoutManager(linearLayoutManager);
-                adapterContactland = new RecyclerContactAdapterLand(contactList);
+                adapterContactland = new RecyclerContactAdapterLand(this,contactList);
                 rv.setAdapter(adapterContactland);
                 searchView = findViewById(R.id.search_view);
                 tabLayout = findViewById(R.id.tablayout);
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                         switch (tab.getPosition()) {
                             case 0:
 
-                                adapterContactland = new RecyclerContactAdapterLand(contactList);
+                                adapterContactland = new RecyclerContactAdapterLand(activity,contactList);
                                 rv.setAdapter(adapterContactland);
                                 break;
                             case 1:
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                                         favcontactlist.add(contact);
                                     }
                                 }
-                                adapteContactfavLand = new RecyclerContactAdapterLand(favcontactlist);
+                                adapteContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
                                 rv.setAdapter(adapteContactfavLand);
                                 break;
                         }
@@ -304,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 }
             });
 
-
             FloatingActionButton fab = findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -316,10 +318,11 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 
             if( recyclerstate != null) rv.getLayoutManager().onRestoreInstanceState(recyclerstate);
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity=this;
             rv = findViewById(R.id.container);
             linearLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv.setLayoutManager(linearLayoutManager);
-            adapterContactland = new RecyclerContactAdapterLand(contactList);
+            adapterContactland = new RecyclerContactAdapterLand(activity,contactList);
             rv.setAdapter(adapterContactland);
             searchView = findViewById(R.id.search_view);
             tabLayout = findViewById(R.id.tablayout);
@@ -329,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                     switch (tab.getPosition()) {
                         case 0:
 
-                            adapterContactland = new RecyclerContactAdapterLand(contactList);
+                            adapterContactland = new RecyclerContactAdapterLand(activity,contactList);
                             rv.setAdapter(adapterContactland);
                             break;
                         case 1:
@@ -339,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                                     favcontactlist.add(contact);
                                 }
                             }
-                            adapteContactfavLand = new RecyclerContactAdapterLand(favcontactlist);
+                            adapteContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
                             rv.setAdapter(adapteContactfavLand);
                             break;
                     }
@@ -404,19 +407,24 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 String newid = data.getStringExtra("id");
                 ArrayList<String> newemail = new ArrayList();
                 ArrayList<String> newname = new ArrayList();
-                LinkedHashMap newphone=new LinkedHashMap();
+                LinkedHashMap newphone = new LinkedHashMap();
 
                 newname.add(data.getStringExtra("name"));
                 newemail.add(data.getStringExtra("email"));
-                newphone.put("as",data.getStringExtra("phone"));
+                newphone.put("as", data.getStringExtra("phone"));
 
                 String newaddress = data.getStringExtra("address");
                 Boolean newfav = Boolean.parseBoolean(data.getStringExtra("fav"));
 
                 contactList.add(new Contact(newid, newname, newemail, newphone, newaddress, newfav, Calendar.getInstance().getTime(), ""));
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 Toast.makeText(context, newid, Toast.LENGTH_SHORT).show();
                 adapterContact.notifyItemInserted(contactList.size());
                 adapterContact.notifyDataSetChanged();
+            }
+            }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                adapterContactland.notifyItemInserted(contactList.size());
+                adapterContactland.notifyDataSetChanged();
             }
         }
     }

@@ -30,6 +30,7 @@
 
     <string name="search_hint">Search…</string>
     <color name="white">#a8ffffff</color>
+    <color name="blacklayout">#aa2d2d2d</color>
 
     <style name="CustomforEditText" >
         <item name="android:hint">@string/createhintexample</item>

@@ -1,5 +1,6 @@
 package com.meag.contactsp.Activities;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import android.view.View;
 
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.meag.contactsp.Adapters.PhoneAdapter;
@@ -32,6 +34,8 @@ public class Description_Contact extends AppCompatActivity {
     private TextView address;
     private Bundle bundle;
     private Contact contact;
+    private LinearLayout linearLayout;
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,9 @@ public class Description_Contact extends AppCompatActivity {
         birthday=findViewById(R.id.birthday_text);
 //        address=findViewById(R.id.addresstext);
         btnback=findViewById(R.id.btnback);
+        btnback.setImageResource(R.drawable.ic_back);
+        linearLayout=findViewById(R.id.layout);
+        linearLayout.setBackgroundColor(R.color.blacklayout);
         linearLayoutManager= new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
 

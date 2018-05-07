@@ -11,11 +11,16 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.meag.contactsp.Adapters.PhoneAdapter;
 import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
 import com.meag.contactsp.Objects.Contact;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +35,16 @@ import java.util.List;
  */
 public class FMainLandscape extends Fragment {
     RecyclerView recyclerView;
-    private List<Contact> favcontactlist,contactList;
     private LinearLayoutManager linearLayoutManager;
-    TabLayout tabLayout;
-    private SearchView searchView;
-    private RecyclerContactAdapterLand adapterContactland,adapterContactfav;
 
+    private RecyclerView rv;
+    private PhoneAdapter phoneAdapter;
+    private ImageView img;
+    private TextView name;
+    private ImageButton back;
+    TextView birthday;
+    private TextView phone;
+    Contact contact;
 
 
     private OnFragmentInteractionListener mListener;
@@ -57,7 +66,7 @@ public class FMainLandscape extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            contactList = (List<Contact>) getArguments().getSerializable("list");
+            contact = (Contact) getArguments().getSerializable("list");
 
         }
     }
@@ -65,51 +74,46 @@ public class FMainLandscape extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.fragment_fmain_landscape, container, false);
-        recyclerView=v.findViewById(R.id.containerland);
-        recyclerView.setHasFixedSize(true);
-        linearLayoutManager=new LinearLayoutManager(this.getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        adapterContactland =new RecyclerContactAdapterLand(contactList);
-        recyclerView.setAdapter(adapterContactland);
-        searchView=v.findViewById(R.id.search_view);
-        tabLayout=v.findViewById(R.id.tablayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
-                    case 0:
+        View v = inflater.inflate(R.layout.activity_description__contact, container, false);
+        rv = v.findViewById(R.id.phonerecyclerview);
+        img = v.findViewById(R.id.description_image_view);
+        back=v.findViewById(R.id.btnback);
+        name = v.findViewById(R.id.name_text);
+        birthday = v.findViewById(R.id.birthday_text);
+//        address=findViewById(R.id.addresstext);
+        linearLayoutManager = new LinearLayoutManager(this.getContext());
+        rv.setLayoutManager(linearLayoutManager);
 
-                        adapterContactland = new RecyclerContactAdapterLand(contactList);
-                        recyclerView.setAdapter(adapterContactland);
-
-                        break;
-                    case 1:
-                        favcontactlist = new ArrayList<>();
-                        for (Contact contact : contactList) {
-                            if (contact.isFavmarker()) {
-                                favcontactlist.add(contact);
-                            }
-                        }
-                        adapterContactfav = new RecyclerContactAdapterLand(favcontactlist);
-                        recyclerView.setAdapter(adapterContactfav);
-
-                        break;
-                }
+        if (contact != null) {
+            if (contact.getImg() != null) {
+                Uri uri = Uri.parse(contact.getImg());
+                img.setImageURI(uri);
+            } else {
+                img.setImageResource(R.mipmap.person);
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
+            if (contact.getName().size() > 0) {
+                name.setText(contact.getName().get(0));
+            } else {
+                name.setText("-");
             }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+//            if(contact.getEmail().size()>0){
+//                email.setText(contact.getEmail().get(0));}
+//            else {email.setText("-");}
+            if (contact.getPhone().size() > 0) {
+                String phonestring = new ArrayList<String>(contact.getPhone().values()).get(0);
+                phoneAdapter = new PhoneAdapter(this.getContext(), contact.getPhone());
+                rv.setAdapter(phoneAdapter);
+            } else {
+                phone.setText("-");
             }
-        });
+//            if(contact.getAddress()!=null){
+//                address.setText(contact.getAddress());}
+//            else {address.setText("-");}
+            if (contact.getBirthdate() != null) {
+                birthday.setText(contact.getBirthdate().toString());
+            }
+        }
         return v;
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
