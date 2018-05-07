@@ -46,7 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_name"
-            style="@style/CustomforEditText"/>
+            style="@style/CustomforEditText"
+            android:imeOptions="flagNoExtractUi"/>
 
         <TextView
             android:id="@+id/text_view_last_name"
@@ -64,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_last_name"
+            android:imeOptions="flagNoExtractUi"
             style="@style/CustomforEditText"/>
 
         <TextView
@@ -82,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_email"
+            android:imeOptions="flagNoExtractUi"
             style="@style/CustomforEditText" />
 
         <TextView
@@ -100,6 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_address"
+            android:imeOptions="flagNoExtractUi"
             style="@style/CustomforEditText"/>
 
         <TextView
@@ -119,6 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_phone"
             android:inputType="phone"
+            android:imeOptions="flagNoExtractUi"
             style="@style/CustomforEditText"/>
         <Button
             android:id="@+id/btnadd"
