@@ -1,6 +1,7 @@
 package com.meag.contactsp.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 
 public class Description_Contact extends AppCompatActivity {
 
-    private ImageButton btnback;
+    private ImageButton btnback,btn_delete;
     private RecyclerView rv;
     private PhoneAdapter phoneAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -48,6 +49,7 @@ public class Description_Contact extends AppCompatActivity {
 //        address=findViewById(R.id.addresstext);
         btnback=findViewById(R.id.btnback);
         btnback.setImageResource(R.drawable.ic_back);
+        btn_delete=findViewById(R.id.btn_delete);
         linearLayout=findViewById(R.id.layout);
         linearLayout.setBackgroundColor(R.color.blacklayout);
         linearLayoutManager= new LinearLayoutManager(this);
@@ -60,7 +62,7 @@ public class Description_Contact extends AppCompatActivity {
                 Uri uri=Uri.parse(contact.getImg());
                 img.setImageURI(uri);
             }else{
-                img.setImageResource(R.mipmap.person);
+                img.setImageResource(R.drawable.person);
             }
             if(contact.getName().size()>0){
                 name.setText(contact.getName().get(0));}
@@ -82,7 +84,16 @@ public class Description_Contact extends AppCompatActivity {
             }
         }
 
+    btn_delete.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent=new Intent();
+            intent.putExtra("contactindex",contact);
+            setResult(2,intent);
+            finish();
 
+        }
+    });
 
 //
 

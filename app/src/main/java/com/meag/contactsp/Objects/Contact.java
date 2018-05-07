@@ -31,8 +31,7 @@ public class Contact implements Serializable {
     }
 
     public String getId() {
-        return id;
-    }
+        return id;    }
 
     public void setId(String id) {
         this.id = id;

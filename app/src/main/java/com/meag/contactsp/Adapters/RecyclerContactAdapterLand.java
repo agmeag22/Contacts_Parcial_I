@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.meag.contactsp.Activities.MainActivity;
 import com.meag.contactsp.FMainLandscape;
 import com.meag.contactsp.Methods.ContactFilterLand;
 import com.meag.contactsp.Objects.Contact;
@@ -58,7 +59,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
-            holder.img.setImageResource(R.mipmap.person);
+            holder.img.setImageResource(R.drawable.person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);
@@ -66,8 +67,7 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
         else{
             holder.btnfav.setImageResource(R.drawable.ic_favoriteempty);
         }
-
-        holder.btnfav.setOnClickListener( new View.OnClickListener() {
+        holder.btnfav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!contactlist.get(position).isFavmarker()){
@@ -76,6 +76,8 @@ public class RecyclerContactAdapterLand extends RecyclerView.Adapter<RecyclerCon
                 }else{
                     contactlist.get(position).setFavmarker(false);
                     favstar.setImageResource(R.drawable.ic_favoriteempty);
+
+
                 }
             }
         });

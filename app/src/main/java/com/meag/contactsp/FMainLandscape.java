@@ -3,11 +3,9 @@ package com.meag.contactsp;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.meag.contactsp.Activities.MainActivity;
 import com.meag.contactsp.Adapters.PhoneAdapter;
-import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
 import com.meag.contactsp.Objects.Contact;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +42,7 @@ public class FMainLandscape extends Fragment {
     TextView birthday;
     private TextView phone;
     Contact contact;
+    ImageButton button_delete;
 
 
     private OnFragmentInteractionListener mListener;
@@ -80,6 +78,7 @@ public class FMainLandscape extends Fragment {
         back=v.findViewById(R.id.btnback);
         name = v.findViewById(R.id.name_text);
         birthday = v.findViewById(R.id.birthday_text);
+        button_delete=v.findViewById(R.id.btn_delete);
 //        address=findViewById(R.id.addresstext);
         linearLayoutManager = new LinearLayoutManager(this.getContext());
         rv.setLayoutManager(linearLayoutManager);
@@ -89,7 +88,7 @@ public class FMainLandscape extends Fragment {
                 Uri uri = Uri.parse(contact.getImg());
                 img.setImageURI(uri);
             } else {
-                img.setImageResource(R.mipmap.person);
+                img.setImageResource(R.drawable.person);
             }
             if (contact.getName().size() > 0) {
                 name.setText(contact.getName().get(0));
@@ -113,6 +112,19 @@ public class FMainLandscape extends Fragment {
                 birthday.setText(contact.getBirthdate().toString());
             }
         }
+        button_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity main = (MainActivity) getActivity();
+                int index = main.getContactList().indexOf(contact);
+                main.getContactList().remove(contact);
+                main.getAdapterContactland().notifyItemRemoved(index);
+                main.getAdapterContactland().notifyDataSetChanged();
+
+                getActivity().getSupportFragmentManager().popBackStack();
+
+            }
+        });
         return v;
     }
 

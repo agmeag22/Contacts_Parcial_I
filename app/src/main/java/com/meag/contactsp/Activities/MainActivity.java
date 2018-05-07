@@ -1,6 +1,5 @@
 package com.meag.contactsp.Activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.meag.contactsp.Adapters.RecyclerContactAdapter;
 import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
-import com.meag.contactsp.FMainLandscape;
 import com.meag.contactsp.Methods.Contact_Obtain;
 import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     private TabLayout tabLayout;
     private SearchView searchView;
     private Contact_Obtain class_contact =new Contact_Obtain(this);
-    RecyclerContactAdapterLand adapterContactland,adapteContactfavLand;
+    RecyclerContactAdapterLand adapterContactland, adapterContactfavLand;
     AppCompatActivity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                                         favcontactlist.add(contact);
                                     }
                                 }
-                                adapteContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
-                                rv.setAdapter(adapteContactfavLand);
+                                adapterContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
+                                rv.setAdapter(adapterContactfavLand);
                                 break;
                         }
                     }
@@ -177,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                                 adapterContactland.getFilter().filter(newText);
                                 break;
                             case 1:
-                                adapteContactfavLand.getFilter().filter(newText);
+                                adapterContactfavLand.getFilter().filter(newText);
                                 break;
                         }
                         return false;
@@ -342,8 +340,8 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                                     favcontactlist.add(contact);
                                 }
                             }
-                            adapteContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
-                            rv.setAdapter(adapteContactfavLand);
+                            adapterContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
+                            rv.setAdapter(adapterContactfavLand);
                             break;
                     }
                 }
@@ -371,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                             adapterContactland.getFilter().filter(newText);
                             break;
                         case 1:
-                            adapteContactfavLand.getFilter().filter(newText);
+                            adapterContactfavLand.getFilter().filter(newText);
                             break;
                     }
                     return false;
@@ -426,7 +424,55 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 adapterContactland.notifyItemInserted(contactList.size());
                 adapterContactland.notifyDataSetChanged();
             }
+        }else if(requestCode==0){
+            if(resultCode==2){
+                Contact contactfordelete= (Contact) data.getSerializableExtra("contactindex");
+                int index=contactList.indexOf(contactfordelete);
+                contactList.remove(index);
+                adapterContact.notifyItemRemoved(index);
+                adapterContact.notifyDataSetChanged();
+                adapterContactfav.notifyItemRemoved(index);
+                adapterContactfav.notifyDataSetChanged();
+
+            }
         }
+    }
+
+    public List<Contact> getFavcontactlist() {
+        return favcontactlist;
+    }
+
+    public void setFavcontactlist(List<Contact> favcontactlist) {
+        this.favcontactlist = favcontactlist;
+    }
+
+    public List<Contact> getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(List<Contact> contactList) {
+        this.contactList = contactList;
+    }
+
+    public RecyclerContactAdapter getAdapterContact() {
+        return adapterContact;
+    }
+
+
+    public RecyclerContactAdapterLand getAdapterContactland() {
+        return adapterContactland;
+    }
+
+    public void setAdapterContactland(RecyclerContactAdapterLand adapterContactland) {
+        this.adapterContactland = adapterContactland;
+    }
+
+    public RecyclerContactAdapterLand getAdapterContactfavLand() {
+        return adapterContactfavLand;
+    }
+
+    public void setAdapterContactfavLand(RecyclerContactAdapterLand adapterContactfavLand) {
+        this.adapterContactfavLand = adapterContactfavLand;
     }
 }
 

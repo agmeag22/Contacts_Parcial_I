@@ -47,7 +47,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
-            holder.img.setImageResource(R.mipmap.person);
+            holder.img.setImageResource(R.drawable.person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);
@@ -65,6 +65,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                 }else{
                     contactlist.get(position).setFavmarker(false);
                     favstar.setImageResource(R.drawable.ic_favoriteempty);
+
                 }
             }
         });
@@ -72,7 +73,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(v.getContext(),Description_Contact.class);
-
+                    int index=contactlist.indexOf(position);
 //
                     intent.putExtra("contactl", contactlist.get(position));
 
