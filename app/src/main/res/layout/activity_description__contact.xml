@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".Activities.Description_Contact"
     android:orientation="vertical"
+    android:background="@android:color/black"
     >
 
     <LinearLayout
@@ -49,15 +50,27 @@
                     android:background="@android:color/transparent" />
                     <ImageButton
                         android:id="@+id/btn_delete"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="8dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitCenter"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
-                        android:src="@mipmap/ic_delete"
-                        />
+                        android:src="@drawable/ic_delete"
+                        android:layout_alignParentEnd="true" />
+
+                    <ImageButton
+                        android:id="@+id/btn_edit"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/btn_delete"
+                        android:layout_marginTop="44dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_edit"
+                        android:layout_alignLeft="@+id/btn_delete" />
                 </RelativeLayout>
                 <TextView
                     android:id="@+id/name_text"
@@ -65,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="40sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@android:color/white"
                     android:textAlignment="center"/>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -75,11 +88,11 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:textColor="@color/white"
-                        android:text="@string/birthday"
+                        android:src="@drawable/ic_birthday"
                         />
                     <TextView
                         android:id="@+id/birthday_text"
@@ -88,6 +101,7 @@
                         android:layout_weight="1"
                         android:textColor="@color/white"
                         android:paddingLeft="15dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@color/cardview_shadow_start_color"
                         android:layout_marginLeft="3dp"/>
 
@@ -100,21 +114,22 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="@string/addresstext"
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_location"
                         />
+
                     <TextView
                         android:id="@+id/addresstext"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="3dp"
                         android:layout_weight="1"
-                        android:textColor="@color/white"
-                        android:paddingLeft="15dp"
                         android:background="@color/cardview_shadow_start_color"
-                        android:layout_marginLeft="3dp"/>
+                        android:paddingLeft="15dp"
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -125,11 +140,10 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:text="@string/emailtext"
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_mail"
                         />
                     <TextView
                         android:id="@+id/email_text"
@@ -137,9 +151,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="15dp"
+                        android:layout_gravity="center_vertical"
                         android:textColor="@color/white"
                         android:background="@color/cardview_shadow_start_color"
-                        android:layout_marginLeft="20dp"/>
+                        android:layout_marginLeft="3dp"/>
 
                 </LinearLayout>
 

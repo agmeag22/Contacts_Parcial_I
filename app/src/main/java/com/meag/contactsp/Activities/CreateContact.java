@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class CreateContact extends AppCompatActivity {
     ImageButton btnback;
@@ -26,12 +28,13 @@ public class CreateContact extends AppCompatActivity {
     Button btnadd;
     ImageButton btnfav;
     Uri image;
-    Boolean favmark;
+    Boolean favmark,imagebool;
     String sid;
     String sname;
     String semail;
     String saddress;
     String sphone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,12 +44,19 @@ public class CreateContact extends AppCompatActivity {
         email= findViewById(R.id.edit_text_email);
         address= findViewById(R.id.edit_text_address);
         btnback=findViewById(R.id.btnback);
+        photo=findViewById(R.id.create_imageview_descrpition);
         phone=findViewById(R.id.edit_text_phone);
         btnadd=findViewById(R.id.btnadd);
         btnfav=findViewById(R.id.favchecker);
-        image=Uri.parse("res:///" + R.drawable.person);
         favmark=false;
+        imagebool=false;
 
+        if(imagebool){
+            //photo.setImageResource();
+        }else{
+            photo.setImageResource(R.drawable.ic_personbig);
+            image=null;
+        }
 
         btnfav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,16 +79,22 @@ public class CreateContact extends AppCompatActivity {
                 semail=String.valueOf(email.getText());
                 saddress=String.valueOf(address.getText());
                 sphone=phone.getText().toString();
-                btnfav.setImageResource(R.drawable.ic_favoriteempty);
-
+                ArrayList<String> arrayname=new ArrayList<>();
+                ArrayList<String> arrayemail=new ArrayList<>();
+                LinkedHashMap<String,String> hashMapphone=new LinkedHashMap<>();
+                arrayname.add(sname);
+                arrayemail.add(semail);
+                hashMapphone.put("phone",sphone);
+                Contact contact=new Contact();
+                contact.setId(sid);
+                contact.setName(arrayname);
+                contact.setEmail(arrayemail);
+                contact.setAddress(saddress);
+                contact.setPhone(hashMapphone);
+                contact.setFavmarker(favmark);
                 Intent intent= new Intent();
-                intent.putExtra("id",sid);
-                intent.putExtra("name",sname);
-                intent.putExtra("email",semail);
-                intent.putExtra("phone",sphone);
-                intent.putExtra("address",saddress);
-                intent.putExtra("fav",favmark.toString());
-                intent.putExtra("image",image.toString());
+                intent.putExtra("new_contact",contact);
+
 
                 setResult(RESULT_OK,intent);
                 finish();

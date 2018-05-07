@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.meag.contactsp.Adapters.RecyclerContactAdapter;
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 });
 
 
-                FloatingActionButton fab = findViewById(R.id.fab);
+                ImageView fab = findViewById(R.id.fab);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 });
 
 
-                FloatingActionButton fab = findViewById(R.id.fab);
+                ImageView fab = findViewById(R.id.fab);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 }
             });
 
-            FloatingActionButton fab = findViewById(R.id.fab);
+            ImageView fab = findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -334,12 +334,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                             rv.setAdapter(adapterContactland);
                             break;
                         case 1:
-                            favcontactlist = new ArrayList<>();
-                            for (Contact contact : contactList) {
-                                if (contact.isFavmarker()) {
-                                    favcontactlist.add(contact);
-                                }
-                            }
+                            getfavorites();
                             adapterContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
                             rv.setAdapter(adapterContactfavLand);
                             break;
@@ -377,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             });
 
 
-            FloatingActionButton fab = findViewById(R.id.fab);
+            ImageView fab = findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -400,45 +395,52 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // check that it is the SecondActivity with an OK result
-        if(requestCode==1) {
-            if (resultCode== RESULT_OK) {
-                String newid = data.getStringExtra("id");
-                ArrayList<String> newemail = new ArrayList();
-                ArrayList<String> newname = new ArrayList();
-                LinkedHashMap newphone = new LinkedHashMap();
-
-                newname.add(data.getStringExtra("name"));
-                newemail.add(data.getStringExtra("email"));
-                newphone.put("as", data.getStringExtra("phone"));
-
-                String newaddress = data.getStringExtra("address");
-                Boolean newfav = Boolean.parseBoolean(data.getStringExtra("fav"));
-
-                contactList.add(new Contact(newid, newname, newemail, newphone, newaddress, newfav, Calendar.getInstance().getTime(), ""));
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-                Toast.makeText(context, newid, Toast.LENGTH_SHORT).show();
-                adapterContact.notifyItemInserted(contactList.size());
-                adapterContact.notifyDataSetChanged();
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Contact new_contact = (Contact) data.getSerializableExtra("new_contact");
+                contactList.add(new_contact);
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+//                Toast.makeText(context, newid, Toast.LENGTH_SHORT).show();
+                    // adapterContact.contactlist.add(new_contact);
+                    adapterContact.contactlist = contactList;
+                    adapterContact.notifyItemInserted(contactList.size());
+                    adapterContact.notifyDataSetChanged();
+                    if (tabLayout.getSelectedTabPosition() == 1) {
+                        adapterContactfav.contactlist=getfavorites();
+                        adapterContactfav.notifyDataSetChanged();
+                    }
+                } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // adapterContactland.contactlist.add(new_contact);
+                    adapterContactland.notifyItemInserted(contactList.size());
+                    adapterContactland.notifyDataSetChanged();
+                }
             }
-            }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                adapterContactland.notifyItemInserted(contactList.size());
-                adapterContactland.notifyDataSetChanged();
-            }
-        }else if(requestCode==0){
-            if(resultCode==2){
-                int index= (int) data.getSerializableExtra("remove_contact_index");
-                contactList.remove(index);
-                adapterContact.contactlist.remove(index);
-                adapterContact.notifyItemRemoved(index);
-                adapterContact.notifyDataSetChanged();
-                if(adapterContactfav!=null) {
 
+        } else if (requestCode == 0) {
+            if (resultCode == 2) {
+                int index = -1;
+                if (tabLayout.getSelectedTabPosition() == 1) {
+                    index = (int) data.getIntExtra("remove_contact_index", -1);
+                    int index2 = contactList.indexOf(adapterContactfav.contactlist.get(index));
+                    adapterContactfav.contactlist.remove(index);
                     adapterContactfav.notifyItemRemoved(index);
                     adapterContactfav.notifyDataSetChanged();
+
+
+                    contactList.remove(index2);
+                } else {
+                    index = (int) data.getIntExtra("remove_contact_index", -1);
+                    contactList.remove(index);
+                    adapterContact.notifyItemRemoved(index);
+                    adapterContact.notifyDataSetChanged();
                 }
             }
         }
     }
+
+
+
+
 
     public List<Contact> getFavcontactlist() {
         return favcontactlist;
@@ -475,6 +477,15 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 
     public void setAdapterContactfavLand(RecyclerContactAdapterLand adapterContactfavLand) {
         this.adapterContactfavLand = adapterContactfavLand;
+    }
+    public List<Contact> getfavorites() {
+        favcontactlist = new ArrayList<>();
+        for (Contact contact : contactList) {
+            if (contact.isFavmarker()) {
+                favcontactlist.add(contact);
+            }
+        }
+        return favcontactlist;
     }
 }
 

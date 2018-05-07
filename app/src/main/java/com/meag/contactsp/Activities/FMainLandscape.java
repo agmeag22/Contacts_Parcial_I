@@ -92,7 +92,7 @@ public class FMainLandscape extends Fragment {
                 Uri uri=Uri.parse(contact.getImg());
                 img.setImageURI(uri);}
             else{
-                img.setImageResource(R.drawable.person); }
+                img.setImageResource(R.drawable.ic_personbig); }
 
             if(contact.getName().size()>0){
                 name.setText(contact.getName().get(0));}

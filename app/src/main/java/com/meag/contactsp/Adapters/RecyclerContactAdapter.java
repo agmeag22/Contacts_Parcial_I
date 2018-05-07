@@ -47,7 +47,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
         if(contactlist.get(position).getImg()!=null) {
             holder.img.setImageURI(Uri.parse(contactlist.get(position).getImg()));
         }else{
-            holder.img.setImageResource(R.drawable.person);
+            holder.img.setImageResource(R.drawable.ic_person);
         }
         if(contactlist.get(position).isFavmarker()) {
             holder.btnfav.setImageResource(R.drawable.ic_favoritefull);

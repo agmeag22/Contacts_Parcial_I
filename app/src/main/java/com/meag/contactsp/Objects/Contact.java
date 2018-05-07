@@ -30,6 +30,10 @@ public class Contact implements Serializable {
         this.img = img;
     }
 
+    public Contact() {
+
+    }
+
     public String getId() {
         return id;    }
 

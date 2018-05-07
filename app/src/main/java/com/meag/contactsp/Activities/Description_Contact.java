@@ -42,7 +42,6 @@ public class Description_Contact extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description__contact);
         maindescriptionLayout=findViewById(R.id.main_content);
-        maindescriptionLayout.setBackgroundResource(R.drawable.background);
         Bundle bundle=getIntent().getExtras();
         rv=findViewById(R.id.phonerecyclerview);
         img= findViewById(R.id.description_image_view);
@@ -53,8 +52,6 @@ public class Description_Contact extends AppCompatActivity {
         btnback=findViewById(R.id.btnback);
         btnback.setImageResource(R.drawable.ic_back);
         btn_delete=findViewById(R.id.btn_delete);
-        linearLayout=findViewById(R.id.layout);
-        linearLayout.setBackgroundColor(R.color.blacklayout);
         linearLayoutManager= new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
         if(bundle.getInt("index",-1)>-1){
@@ -66,7 +63,7 @@ public class Description_Contact extends AppCompatActivity {
                 Uri uri=Uri.parse(contact.getImg());
                 img.setImageURI(uri);}
             else{
-                img.setImageResource(R.drawable.person); }
+                img.setImageResource(R.drawable.ic_personbig); }
 
             if(contact.getName().size()>0){
                 name.setText(contact.getName().get(0));}

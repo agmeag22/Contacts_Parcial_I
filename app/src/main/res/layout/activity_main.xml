@@ -5,23 +5,36 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Activities.MainActivity"
+    android:background="@android:color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
-            style="@style/SearchViewStyle"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:imeOptions="flagNoExtractUi"/>
+            android:orientation="horizontal"
+            android:layout_gravity="right">
+            <ImageView
+                android:id="@+id/fab"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+
+                android:src="@drawable/ic_add" />
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                style="@style/SearchViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:imeOptions="flagNoExtractUi"/>
+
+        </LinearLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"
@@ -56,13 +69,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
-        android:src="@mipmap/ic_add" />
+
 
 
 </android.support.design.widget.CoordinatorLayout>
