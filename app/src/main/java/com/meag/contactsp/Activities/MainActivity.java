@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
+                .setTitle(R.string.question)
                 .setMessage(R.string.exit_question)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
