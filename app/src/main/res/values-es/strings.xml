@@ -25,4 +25,5 @@
     <string name="yes">si</string>
     <string name="sorryappshutdown">Lo siento, todos los permisos son necesarios</string>
     <string name="search_hint">Buscar…</string>
+    <string name="restartapp">Restart the application</string>
 </resources>

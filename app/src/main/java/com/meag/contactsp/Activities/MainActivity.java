@@ -1,16 +1,19 @@
 package com.meag.contactsp.Activities;
 
+import android.Manifest;
 import android.content.Context;
 //add dialogs
 import android.content.DialogInterface;
 //add intent
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,17 +53,17 @@ ArrayList<String> denied;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        permissionManager = new PermissionManager() {
-        };
-        permissionManager.checkAndRequestPermissions(this);
-        if (denied!=null) {
-            Toast.makeText(this, R.string.sorryappshutdown, Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissionManager = new PermissionManager() {
+            };
+            permissionManager.checkAndRequestPermissions(this);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+            setContentView(R.layout.activity_main);
             if (savedInstanceState == null) {
-
-
                 contactList = new ArrayList<>();
                 contactList = class_contact.findContacts();
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

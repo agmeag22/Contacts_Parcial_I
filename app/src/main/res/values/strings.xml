@@ -27,5 +27,6 @@
     <string name="yes">yes</string>
     <string name="sorryappshutdown">Im sorry, all permissions are needed</string>
     <string name="search_hint">Search…</string>
+    <string name="restartapp">Restart the application</string>
 
 </resources>
