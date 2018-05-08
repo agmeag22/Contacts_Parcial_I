@@ -48,4 +48,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="DialogTheme">
+        <item name="colorAccent">#4173a3</item>
+    </style>
 </resources>

@@ -1,6 +1,7 @@
 package com.meag.contactsp.Activities;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,8 +10,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,7 +26,12 @@ import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 public class CreateContact extends AppCompatActivity {
@@ -45,18 +53,14 @@ public class CreateContact extends AppCompatActivity {
     String saddress;
     String sphone;
     Contact contact;
+    Uri photoURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_contact);
         findviews();
-        birthday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //showDatePickerDialog();
-            }
-        });
+
         favmark=false;
         photo.setImageResource(R.drawable.ic_personbig);
         if(getIntent().getSerializableExtra("contacto")!=null){
@@ -78,6 +82,37 @@ public class CreateContact extends AppCompatActivity {
     }
 
     public void clicklisteners(){
+        birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar fechaActual = Calendar.getInstance();
+                if(contact.getBirthdate()!=null) {
+                    fechaActual.setTime(contact.getBirthdate());
+                }
+                int anio = fechaActual.get(Calendar.YEAR);
+                int mes = fechaActual.get(Calendar.MONTH);
+                int dia = fechaActual.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                        try {
+                            birthday.setText( dayOfMonth+ "/" + (monthOfYear+1) + "/" +   year);
+                            contact.setBirthdate(format.parse(dayOfMonth+ "/" + (monthOfYear+1) + "/" +  year));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+
+
+                        }
+                    }
+
+                };
+                DatePickerDialog picker = new DatePickerDialog(CreateContact.this,android.R.style.Theme_DeviceDefault_Light_Dialog, date, anio, mes, dia);
+                picker.show();
+            }
+        });
         btnfav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +134,7 @@ public class CreateContact extends AppCompatActivity {
                 semail=String.valueOf(email.getText());
                 saddress=String.valueOf(address.getText());
                 sphone=phone.getText().toString();
-                contact=setValues();
+                setValues();
                 Intent intent= new Intent();
                 intent.putExtra("new_contact",contact);
                 setResult(Activity.RESULT_OK,intent);
@@ -138,8 +173,7 @@ public class CreateContact extends AppCompatActivity {
         changeimage=findViewById(R.id.btnchangeimage);
         birthday=findViewById(R.id.edit_text_birthday);
     }
-    public Contact setValues(){
-        Contact contact=new Contact();
+    public void setValues(){
         ArrayList<String> arrayname=new ArrayList<>();
         ArrayList<String> arrayemail=new ArrayList<>();
         LinkedHashMap<String,String> hashMapphone=new LinkedHashMap<>();
@@ -153,7 +187,6 @@ public class CreateContact extends AppCompatActivity {
         contact.setAddress(saddress);
         contact.setPhone(hashMapphone);
         contact.setFavmarker(favmark);
-        return contact;
     }
     public void settextviews(){
         if(contact.getName().size()>0){
@@ -172,6 +205,7 @@ public class CreateContact extends AppCompatActivity {
     }
     private void selectImage() {
         final CharSequence[] items = {
+                getString(R.string.selectphoto),
                 getString(R.string.selectphotog),
                 getString(R.string.cancel)
         };
@@ -181,53 +215,82 @@ public class CreateContact extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-//                if (items[item].equals(getString(R.string.selectphoto))) {
-//                    File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    startActivityForResult(intent, 8);  }else{
-                 if (items[item].equals(getString(R.string.selectphotog))) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(
-                            Intent.createChooser(intent, getString(R.string.title_selection)),
-                            8);
-                } else if (items[item].equals(getString(R.string.cancel))) {
-                    dialog.dismiss();
+                if (items[item].equals(getString(R.string.selectphoto))) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    // Ensure that there's a camera activity to handle the intent
+                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+
+                        File photoFile = null;
+                        try {
+                              photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            // Error occurred while creating the File...
+                        }
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            photoURI = Uri.fromFile(photoFile);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, 9);
+                        }
+
+                    }
+
+                } else {
+                    if (items[item].equals(getString(R.string.selectphotog))) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, getString(R.string.title_selection)),
+                                8);
+                    } else if (items[item].equals(getString(R.string.cancel))) {
+                        dialog.dismiss();
+                    }
                 }
             }
         });
         builder.show();
     }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == 8 && resultCode == RESULT_OK) {
             Uri selectedImageURI = data.getData();
-            contact.setImg(selectedImageURI.toString());
+            if(selectedImageURI!=null) {
+                contact.setImg(selectedImageURI.toString());
 
-            Glide.with(this).load(new File(ImageURI.getRealPathFromURI(this, selectedImageURI))).apply(RequestOptions.overrideOf(150, 150)).into(photo);
-            photo.setImageURI(selectedImageURI);
-            Toast.makeText(this, getString(R.string.selectionmade), Toast.LENGTH_SHORT).show();
+                Glide.with(this).load(new File(ImageURI.getRealPathFromURI(this, selectedImageURI))).apply(RequestOptions.overrideOf(150, 150)).into(photo);
+                photo.setImageURI(selectedImageURI);
+                Toast.makeText(this, "URI:" + selectedImageURI.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == 9 && resultCode == RESULT_OK) {
+            if (photoURI != null) {
+                contact.setImg(photoURI.toString());
+
+                Glide.with(this).load(new File(ImageURI.getRealPathFromURI(this, photoURI))).apply(RequestOptions.overrideOf(150, 150)).into(photo);
+                photo.setImageURI(photoURI);
+
+            }
         }
     }
 
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = image.getAbsolutePath();
-//        return image
-//private void showDatePickerDialog() {
-//    DatePickerFragment newFragment = new DatePickerFragment();
-//    newFragment.show(getActivity().getSupportFragmentManager(), "datePicker")
-//}
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
+    }
+
 }

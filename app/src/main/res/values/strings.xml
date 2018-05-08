@@ -25,5 +25,6 @@
     <string name="title_selection">Selection:</string>
     <string name="selectionmade">Image Selected</string>
     <string name="changetoselect">Pick an option</string>
+    <string name="selectphoto">Take photo</string>
 
 </resources>

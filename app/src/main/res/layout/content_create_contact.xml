@@ -139,6 +139,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_birthday"
             android:inputType="date"
+            android:clickable="true"
+            android:editable="false"
+            android:focusable="false"
             style="@style/CustomforEditText"/>
         <Button
             android:id="@+id/btnadd"
@@ -146,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_text_birthday"
             android:layout_centerHorizontal="true"
+
             android:text="@string/add"
             android:background="@color/tabinferior" />
     </RelativeLayout>
