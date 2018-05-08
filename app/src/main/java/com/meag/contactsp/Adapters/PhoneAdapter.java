@@ -68,14 +68,13 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.PhoneViewHol
     public class PhoneViewHolder extends RecyclerView.ViewHolder{
         TextView phone;
         ImageButton call;
-        ImageButton whatsapp;
+
 
 
         public PhoneViewHolder(View itemView) {
             super(itemView);
             phone = itemView.findViewById(R.id.phone_text);
             call=itemView.findViewById(R.id.call_btn);
-            whatsapp=itemView.findViewById(R.id.whatsapp_mssg_btn);
         }
     }
 

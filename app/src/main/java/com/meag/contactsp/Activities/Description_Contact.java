@@ -24,77 +24,45 @@ import java.util.ArrayList;
 
 public class Description_Contact extends AppCompatActivity {
 
-    private ImageButton btnback,btn_delete;
+    private ImageButton btnback, btn_delete, btn_edit;
     private RecyclerView rv;
     private PhoneAdapter phoneAdapter;
     private LinearLayoutManager linearLayoutManager;
     private ImageView img;
-    private TextView name,birthday,email,address;
-
+    private TextView name, birthday, email, address;
     private Bundle bundle;
     private Contact contact;
-    private LinearLayout linearLayout,maindescriptionLayout;
+    private LinearLayout linearLayout, maindescriptionLayout;
     int index;
+    int REQUEST_CODE_EDIT_CONTACT = 8;
 
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description__contact);
-        maindescriptionLayout=findViewById(R.id.main_content);
-        Bundle bundle=getIntent().getExtras();
-        rv=findViewById(R.id.phonerecyclerview);
-        img= findViewById(R.id.description_image_view);
-        name=findViewById(R.id.name_text);
-        birthday=findViewById(R.id.birthday_text);
-        email=findViewById(R.id.email_text);
-        address=findViewById(R.id.addresstext);
-        btnback=findViewById(R.id.btnback);
-        btnback.setImageResource(R.drawable.ic_back);
-        btn_delete=findViewById(R.id.btn_delete);
-        linearLayoutManager= new LinearLayoutManager(this);
+        setlayouts();
+        linearLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
-        if(bundle.getInt("index",-1)>-1){
-            index=bundle.getInt("index",-1);
-        }
-        if(bundle.getSerializable("contactl")!=null){
-            contact=(Contact) bundle.getSerializable("contactl");
-            if(contact.getImg()!=null){
-                Uri uri=Uri.parse(contact.getImg());
-                img.setImageURI(uri);}
-            else{
-                img.setImageResource(R.drawable.ic_personbig); }
+        setValues();
+        setViews();
+        clicklisteners();
 
-            if(contact.getName().size()>0){
-                name.setText(contact.getName().get(0));}
 
-            if(contact.getEmail().size()>0){
-                email.setText(contact.getEmail().get(0));}
+    }
 
-            if(contact.getPhone().size()>0) {
-            String phonestring=new ArrayList<String>(contact.getPhone().values()).get(0);
-            phoneAdapter=new PhoneAdapter(this,contact.getPhone());
-            rv.setAdapter(phoneAdapter); }
+    public void clicklisteners() {
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if(contact.getAddress()!=null){
-                address.setText(contact.getAddress());}
+                Intent intent = new Intent();
+                intent.putExtra("remove_contact_index", index);
+                setResult(2, intent);
+                finish();
 
-            if(contact.getBirthdate()!=null){
-                birthday.setText(contact.getBirthdate().toString());
             }
-        }
-
-    btn_delete.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            Intent intent=new Intent();
-            intent.putExtra("remove_contact_index",index);
-            setResult(2,intent);
-            finish();
-
-        }
-    });
+        });
 
 
         btnback.setOnClickListener(new View.OnClickListener() {
@@ -105,5 +73,75 @@ public class Description_Contact extends AppCompatActivity {
                 setResult(0);
             }
         });
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), CreateContact.class);
+                intent.putExtra("contacto", contact);
+                startActivityForResult(intent, REQUEST_CODE_EDIT_CONTACT);
+            }
+        });
+
+    }
+
+    public void setlayouts() {
+        maindescriptionLayout = findViewById(R.id.main_content);
+        rv = findViewById(R.id.phonerecyclerview);
+        img = findViewById(R.id.description_image_view);
+        name = findViewById(R.id.name_text);
+        birthday = findViewById(R.id.birthday_text);
+        email = findViewById(R.id.email_text);
+        address = findViewById(R.id.addresstext);
+        btnback = findViewById(R.id.btnback);
+        btn_delete = findViewById(R.id.btn_delete);
+        btn_edit = findViewById(R.id.btn_edit);
+
+    }
+
+    public void setValues() {
+        btnback.setImageResource(R.drawable.ic_back);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle.getInt("index", -1) > -1) {
+            index = bundle.getInt("index", -1);
+        }
+        if (bundle.getSerializable("contactl") != null) {
+            contact = (Contact) bundle.getSerializable("contactl");
+
+        }
+    }
+    public void setViews(){
+        if(contact.getImg()!=null){
+            Uri uri=Uri.parse(contact.getImg());
+            img.setImageURI(uri);}
+        else{
+            img.setImageResource(R.drawable.ic_personbig); }
+
+        if(contact.getName().size()>0){
+            name.setText(contact.getName().get(0));}
+
+        if(contact.getEmail().size()>0){
+            email.setText(contact.getEmail().get(0));}
+
+        if(contact.getPhone().size()>0) {
+            String phonestring=new ArrayList<String>(contact.getPhone().values()).get(0);
+            phoneAdapter=new PhoneAdapter(this,contact.getPhone());
+            rv.setAdapter(phoneAdapter); }
+
+        if(contact.getAddress()!=null){
+            address.setText(contact.getAddress());}
+
+        if(contact.getBirthdate()!=null){
+            birthday.setText(contact.getBirthdate().toString());
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CODE_EDIT_CONTACT){
+            if(resultCode==RESULT_OK){
+                contact= (Contact) data.getSerializableExtra("new_contact");
+                setViews();
+            }
+        }
     }
 }

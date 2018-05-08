@@ -393,8 +393,8 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // check that it is the SecondActivity with an OK result
+        //super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Contact new_contact = (Contact) data.getSerializableExtra("new_contact");

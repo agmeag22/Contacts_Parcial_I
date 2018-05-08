@@ -20,6 +20,16 @@
             android:background="#00ffffff" />
 
         <ImageButton
+            android:id="@+id/btnchangeimage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/create_imageview_descrpition"
+            android:layout_toEndOf="@+id/btnadd"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_edit"
+            android:layout_toRightOf="@+id/btnadd" />
+
+        <ImageButton
             android:id="@+id/favchecker"
             android:layout_width="30dp"
             android:layout_height="30dp"
