@@ -54,7 +54,7 @@ public class CreateContact extends AppCompatActivity {
     String sphone;
     Contact contact;
     Uri photoURI;
-
+    int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +65,7 @@ public class CreateContact extends AppCompatActivity {
         photo.setImageResource(R.drawable.ic_personbig);
         if(getIntent().getSerializableExtra("contacto")!=null){
             contact= (Contact) getIntent().getSerializableExtra("contacto");
+            index= getIntent().getIntExtra("index",-1);
             settextviews();
         }else{
             contact=new Contact();
@@ -137,6 +138,7 @@ public class CreateContact extends AppCompatActivity {
                 setValues();
                 Intent intent= new Intent();
                 intent.putExtra("new_contact",contact);
+                intent.putExtra("index",index);
                 setResult(Activity.RESULT_OK,intent);
                 finish();
 

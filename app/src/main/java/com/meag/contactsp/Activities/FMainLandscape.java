@@ -1,6 +1,7 @@
 package com.meag.contactsp.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,8 +34,9 @@ import java.util.List;
  */
 public class FMainLandscape extends Fragment {
     RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
 
+    private LinearLayoutManager linearLayoutManager;
+    int index;
     private RecyclerView rv;
     private PhoneAdapter phoneAdapter;
     private ImageView img;
@@ -42,7 +44,7 @@ public class FMainLandscape extends Fragment {
     private TextView name,birthday,email,address;
 
     Contact contact;
-    ImageButton button_delete;
+    ImageButton button_delete,button_edit;
 
 
     private OnFragmentInteractionListener mListener;
@@ -83,6 +85,7 @@ public class FMainLandscape extends Fragment {
         email=v.findViewById(R.id.email_text);
         address=v.findViewById(R.id.addresstext);
         button_delete=v.findViewById(R.id.btn_delete);
+        button_edit = v.findViewById(R.id.btn_edit);
 //        address=findViewById(R.id.addresstext);
         linearLayoutManager = new LinearLayoutManager(this.getContext());
         rv.setLayoutManager(linearLayoutManager);
@@ -117,11 +120,23 @@ public class FMainLandscape extends Fragment {
             @Override
             public void onClick(View v) {
                 MainActivity main = (MainActivity) getActivity();
-                int index = main.getContactList().indexOf(contact);
+                index = main.getContactList().indexOf(contact);
                 main.getContactList().remove(contact);
                 main.getAdapterContactland().notifyItemRemoved(index);
                 main.getAdapterContactland().notifyDataSetChanged();
                 getActivity().getSupportFragmentManager().beginTransaction().remove(fMainLandscape).commit();
+            }
+        });
+
+        button_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity main = (MainActivity) getActivity();
+                Intent intent = new Intent(main,CreateContact.class);
+                index = main.getContactList().indexOf(contact);
+                intent.putExtra("contacto", contact);
+                intent.putExtra("index", index);
+                main.startActivityForResult(intent, 3);
             }
         });
         return v;

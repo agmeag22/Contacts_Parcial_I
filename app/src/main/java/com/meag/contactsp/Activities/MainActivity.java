@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     private Contact_Obtain class_contact =new Contact_Obtain(this);
     RecyclerContactAdapterLand adapterContactland, adapterContactfavLand;
     AppCompatActivity activity;
+    int index;
+    private boolean b_edited_contact=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -406,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                     adapterContact.notifyItemInserted(contactList.size());
                     adapterContact.notifyDataSetChanged();
                     if (tabLayout.getSelectedTabPosition() == 1) {
-                        adapterContactfav.contactlist=getfavorites();
+                        adapterContactfav.contactlist = getfavorites();
                         adapterContactfav.notifyDataSetChanged();
                     }
                 } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -441,22 +445,64 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 if (tabLayout.getSelectedTabPosition() == 1) {
                     index = (int) data.getIntExtra("index", -1);
                     int index2 = contactList.indexOf(adapterContactfav.contactlist.get(index));
-                    adapterContactfav.contactlist.set(index,edited_contact);
+                    adapterContactfav.contactlist.set(index, edited_contact);
                     adapterContactfav.notifyItemChanged(index);
-                    contactList.set(index2,edited_contact);
+                    contactList.set(index2, edited_contact);
                 } else {
                     index = (int) data.getIntExtra("index", -1);
-                    contactList.set(index,edited_contact);
+                    contactList.set(index, edited_contact);
                     adapterContact.notifyItemChanged(index);
+                }
+            }
+        }
+
+        if(requestCode == 3) {
+            if (resultCode == -1) {
+                index = -1;
+                Contact edited_contact = (Contact) data.getSerializableExtra("new_contact");
+                if (tabLayout.getSelectedTabPosition() == 1) {
+                    index = (int) data.getIntExtra("index", -1);
+                    int index2 = adapterContactfavLand.contactlist.indexOf(contactList.get(index));
+                    adapterContactfavLand.contactlist.set(index2, edited_contact);
+                    adapterContactfavLand.notifyItemChanged(index2);
+                    contactList.set(index, edited_contact);
+                     b_edited_contact=  true;
+//                    Bundle bundle=new Bundle();
+//                    bundle.putSerializable("list", (Serializable) contactList.get(index));
+//                    FMainLandscape fMainLandscape=new FMainLandscape();
+//                    fMainLandscape.setArguments(bundle);
+//                    FragmentTransaction transaction= activity.getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.frame2, fMainLandscape).commit();
+                } else {
+                    index = (int) data.getIntExtra("index", -1);
+                    contactList.set(index, edited_contact);
+                    adapterContactland.notifyItemChanged(index);
+                    b_edited_contact=true;
+//                    Bundle bundle=new Bundle();
+//                    bundle.putSerializable("list", (Serializable) contactList.get(index));
+//                    FMainLandscape fMainLandscape=new FMainLandscape();
+//                    fMainLandscape.setArguments(bundle);
+//                    FragmentTransaction transaction= activity.getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.frame2, fMainLandscape).commit();
+
                 }
             }
         }
 
     }
 
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(b_edited_contact) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("list", (Serializable) contactList.get(index));
+            FMainLandscape fMainLandscape = new FMainLandscape();
+            fMainLandscape.setArguments(bundle);
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame2, fMainLandscape).commit();
+        }
+    }
 
     public List<Contact> getFavcontactlist() {
         return favcontactlist;
