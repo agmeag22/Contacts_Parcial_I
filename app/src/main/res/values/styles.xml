@@ -28,9 +28,8 @@
         <item name="queryHint">@string/search_hint</item>
     </style>
 
-    <string name="search_hint">Search…</string>
-    <color name="white">#a8ffffff</color>
-    <color name="blacklayout">#aa2d2d2d</color>
+
+
 
     <style name="CustomforEditText" >
         <item name="android:hint">@string/createhintexample</item>
@@ -40,6 +39,7 @@
         <item name="android:background">#bd544f4f</item>
         <item name="android:textColor">#fff</item>
         <item name="android:imeOptions">flagNoExtractUi</item>
+        <item name="android:textColorHint">#7dffffff</item>
     </style>
     <style name="CustomforTextview">
         <item name="android:layout_marginLeft">15dp</item>

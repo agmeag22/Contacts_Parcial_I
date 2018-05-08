@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ContactsP</string>
+    <string name="exit_question">Seguro que desea salir?</string>
+    <string name="title_activity_contact__description">Contact_Description</string>
+    <string name="title_activity_description__contact">Description_Contact</string>
+    <string name="title_activity_create_contact">CreateContact</string>
+    <string name="createname">Nombre</string>
+    <string name="createhintexample">Escriba aqui…</string>
+    <string name="email">Correo</string>
+    <string name="address">Dirección</string>
+    <string name="last_name">Apellido</string>
+    <string name="add">Añadir</string>
+    <string name="phone">Telefono</string>
+    <string name="birthday">Fecha de Cumpleaños:</string>
+    <string name="selectphotog">Seleccionar Galeria</string>
+    <string name="cancel">cancelar</string>
+    <string name="title_selection">Seleccion:</string>
+    <string name="selectionmade">Imagen seleccionada</string>
+    <string name="changetoselect">Elige una opcion</string>
+    <string name="selectphoto">Tomar foto</string>
+    <string name="nochanges">Sin cambios</string>
+    <string name="question">Desea salir?</string>
+    <string name="no">no</string>
+    <string name="yes">si</string>
+    <string name="sorryappshutdown">Lo siento, todos los permisos son necesarios</string>
+    <string name="search_hint">Buscar…</string>
+</resources>

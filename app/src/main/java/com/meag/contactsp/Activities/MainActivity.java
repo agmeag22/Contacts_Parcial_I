@@ -1,11 +1,14 @@
 package com.meag.contactsp.Activities;
 
 import android.content.Context;
+//add dialogs
 import android.content.DialogInterface;
+//add intent
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.karan.churi.PermissionManager.PermissionManager;
 import com.meag.contactsp.Adapters.RecyclerContactAdapter;
 import com.meag.contactsp.Adapters.RecyclerContactAdapterLand;
 import com.meag.contactsp.Methods.Contact_Obtain;
@@ -26,11 +30,10 @@ import com.meag.contactsp.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Serializable{
+    PermissionManager permissionManager;
     private RecyclerView rv;
     private RecyclerContactAdapter adapterContact,adapterContactfav;
     private List<Contact> favcontactlist,contactList;
@@ -43,158 +46,164 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     AppCompatActivity activity;
     int index;
     private boolean b_edited_contact=false;
-
+ArrayList<String> denied;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        permissionManager = new PermissionManager() {
+        };
+        permissionManager.checkAndRequestPermissions(this);
+        if (denied!=null) {
+            Toast.makeText(this, R.string.sorryappshutdown, Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            if (savedInstanceState == null) {
 
-        if (savedInstanceState == null) {
 
+                contactList = new ArrayList<>();
+                contactList = class_contact.findContacts();
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-            contactList = new ArrayList<>();
-            contactList = class_contact.findContacts();
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    context = this;
+                    rv = findViewById(R.id.container);
+                    linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                    rv.setLayoutManager(linearLayoutManager);
+                    adapterContact = new RecyclerContactAdapter(contactList);
+                    rv.setAdapter(adapterContact);
+                    searchView = findViewById(R.id.search_view);
+                    tabLayout = findViewById(R.id.tablayout);
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            switch (tab.getPosition()) {
+                                case 0:
 
-                context = this;
-                rv = findViewById(R.id.container);
-                linearLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
-                rv.setLayoutManager(linearLayoutManager);
-                adapterContact = new RecyclerContactAdapter(contactList);
-                rv.setAdapter(adapterContact);
-                searchView = findViewById(R.id.search_view);
-                tabLayout = findViewById(R.id.tablayout);
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        switch (tab.getPosition()) {
-                            case 0:
-
-                                adapterContact = new RecyclerContactAdapter(contactList);
-                                rv.setAdapter(adapterContact);
-                                break;
-                            case 1:
-                                favcontactlist = new ArrayList<>();
-                                for (Contact contact : contactList) {
-                                    if (contact.isFavmarker()) {
-                                        favcontactlist.add(contact);
+                                    adapterContact = new RecyclerContactAdapter(contactList);
+                                    rv.setAdapter(adapterContact);
+                                    break;
+                                case 1:
+                                    favcontactlist = new ArrayList<>();
+                                    for (Contact contact : contactList) {
+                                        if (contact.isFavmarker()) {
+                                            favcontactlist.add(contact);
+                                        }
                                     }
-                                }
-                                adapterContactfav = new RecyclerContactAdapter(favcontactlist);
-                                rv.setAdapter(adapterContactfav);
-                                break;
+                                    adapterContactfav = new RecyclerContactAdapter(favcontactlist);
+                                    rv.setAdapter(adapterContactfav);
+                                    break;
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
 
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-
-                    }
-                });
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        switch (tabLayout.getSelectedTabPosition()) {
-                            case 0:
-                                adapterContact.getFilter().filter(newText);
-                                break;
-                            case 1:
-                                adapterContactfav.getFilter().filter(newText);
-                                break;
                         }
-                        return false;
-                    }
-                });
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            switch (tabLayout.getSelectedTabPosition()) {
+                                case 0:
+                                    adapterContact.getFilter().filter(newText);
+                                    break;
+                                case 1:
+                                    adapterContactfav.getFilter().filter(newText);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
 
 
-                ImageView fab = findViewById(R.id.fab);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MainActivity.this, CreateContact.class);
-                        startActivityForResult(intent, 1);
-                    }
-                });
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                activity=this;
-                rv = findViewById(R.id.container);
-                linearLayoutManager = new LinearLayoutManager(context);
-                rv.setLayoutManager(linearLayoutManager);
-                adapterContactland = new RecyclerContactAdapterLand(this,contactList);
-                rv.setAdapter(adapterContactland);
-                searchView = findViewById(R.id.search_view);
-                tabLayout = findViewById(R.id.tablayout);
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        switch (tab.getPosition()) {
-                            case 0:
+                    ImageView fab = findViewById(R.id.fab);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                            startActivityForResult(intent, 1);
+                        }
+                    });
+                } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    activity = this;
+                    rv = findViewById(R.id.container);
+                    linearLayoutManager = new LinearLayoutManager(context);
+                    rv.setLayoutManager(linearLayoutManager);
+                    adapterContactland = new RecyclerContactAdapterLand(this, contactList);
+                    rv.setAdapter(adapterContactland);
+                    searchView = findViewById(R.id.search_view);
+                    tabLayout = findViewById(R.id.tablayout);
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            switch (tab.getPosition()) {
+                                case 0:
 
-                                adapterContactland = new RecyclerContactAdapterLand(activity,contactList);
-                                rv.setAdapter(adapterContactland);
-                                break;
-                            case 1:
-                                favcontactlist = new ArrayList<>();
-                                for (Contact contact : contactList) {
-                                    if (contact.isFavmarker()) {
-                                        favcontactlist.add(contact);
+                                    adapterContactland = new RecyclerContactAdapterLand(activity, contactList);
+                                    rv.setAdapter(adapterContactland);
+                                    break;
+                                case 1:
+                                    favcontactlist = new ArrayList<>();
+                                    for (Contact contact : contactList) {
+                                        if (contact.isFavmarker()) {
+                                            favcontactlist.add(contact);
+                                        }
                                     }
-                                }
-                                adapterContactfavLand = new RecyclerContactAdapterLand(activity,favcontactlist);
-                                rv.setAdapter(adapterContactfavLand);
-                                break;
+                                    adapterContactfavLand = new RecyclerContactAdapterLand(activity, favcontactlist);
+                                    rv.setAdapter(adapterContactfavLand);
+                                    break;
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
 
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-
-                    }
-                });
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        switch (tabLayout.getSelectedTabPosition()) {
-                            case 0:
-                                adapterContactland.getFilter().filter(newText);
-                                break;
-                            case 1:
-                                adapterContactfavLand.getFilter().filter(newText);
-                                break;
                         }
-                        return false;
-                    }
-                });
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            switch (tabLayout.getSelectedTabPosition()) {
+                                case 0:
+                                    adapterContactland.getFilter().filter(newText);
+                                    break;
+                                case 1:
+                                    adapterContactfavLand.getFilter().filter(newText);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
 
 
-                ImageView fab = findViewById(R.id.fab);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MainActivity.this, CreateContact.class);
-                        startActivityForResult(intent, 1);
-                    }
-                });
+                    ImageView fab = findViewById(R.id.fab);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(MainActivity.this, CreateContact.class);
+                            startActivityForResult(intent, 1);
+                        }
+                    });
 
 //            Bundle bundle=new Bundle();
 //            bundle.putSerializable("list", (Serializable) contactList);
@@ -204,12 +213,13 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 //            transition.replace(R.id.frame1,fMainLandscape);
 //            transition.addToBackStack(null);
 //            transition.commit();
+                }
+            } else {
+                onRestoreInstanceState(savedInstanceState);
             }
-        } else{
-            onRestoreInstanceState(savedInstanceState);
+
+
         }
-
-
     }
 
     @Override
@@ -548,5 +558,17 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             }
         }
         return favcontactlist;
+    }
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        permissionManager.checkResult(requestCode,permissions,grantResults);
+        denied=new ArrayList<>();
+        denied= permissionManager.getStatus().get(0).denied;
+
+
     }
 }

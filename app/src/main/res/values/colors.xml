@@ -6,5 +6,6 @@
     <color name="tabsuperior">#303F9F</color>
     <color name="tabinferior">#c8e11d1d</color>
     <color name="transparente">#00ffffff</color>
-
+    <color name="white">#a8ffffff</color>
+    <color name="blacklayout">#aa2d2d2d</color>
 </resources>
