@@ -37,6 +37,7 @@
                 android:textStyle="bold"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:textColor="@android:color/white"
                 android:background="@android:color/transparent"/>
         </LinearLayout>
 
