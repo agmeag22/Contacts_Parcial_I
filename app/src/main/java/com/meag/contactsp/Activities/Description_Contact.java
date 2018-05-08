@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.meag.contactsp.Adapters.PhoneAdapter;
 import com.meag.contactsp.Adapters.RecyclerContactAdapter;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 
 public class Description_Contact extends AppCompatActivity {
 
-    private ImageButton btnback, btn_delete, btn_edit;
+    private ImageButton  btnback,btn_delete, btn_edit;
     private RecyclerView rv;
     private PhoneAdapter phoneAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -69,9 +70,16 @@ public class Description_Contact extends AppCompatActivity {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(contact_change) {
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("edited_contact", contact);
+                    returnIntent.putExtra("index", index);
+                    setResult(3, returnIntent);
+                    finish();
+                }else {
+                    finish();
+                }
 
-                finish();
-                setResult(0);
             }
         });
 

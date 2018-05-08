@@ -40,6 +40,9 @@
             android:id="@+id/tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabMaxWidth="0dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
             android:background="@color/cardview_shadow_start_color">
 
             <android.support.design.widget.TabItem

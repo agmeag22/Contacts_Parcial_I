@@ -67,6 +67,12 @@ public class CreateContact extends AppCompatActivity {
             contact= (Contact) getIntent().getSerializableExtra("contacto");
             index= getIntent().getIntExtra("index",-1);
             settextviews();
+            if(contact.isFavmarker()){
+                favmark=true;
+            }
+            if(contact.getImg()!=null){
+                photo.setImageURI(Uri.parse(contact.getImg()));
+            }
         }else{
             contact=new Contact();
         }
@@ -148,6 +154,7 @@ public class CreateContact extends AppCompatActivity {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(CreateContact.this, R.string.nochanges, Toast.LENGTH_SHORT).show();
                 setResult(0);
                 finish();
 
