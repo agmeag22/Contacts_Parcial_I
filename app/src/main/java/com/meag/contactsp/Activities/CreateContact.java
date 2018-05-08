@@ -1,19 +1,28 @@
 package com.meag.contactsp.Activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.meag.contactsp.ImageURI;
 import com.meag.contactsp.Objects.Contact;
 import com.meag.contactsp.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -25,7 +34,7 @@ public class CreateContact extends AppCompatActivity {
     EditText email;
     EditText address;
     EditText phone;
-    EditText id;
+    EditText birthday;
     Button btnadd;
     ImageButton btnfav;
     Uri image;
@@ -42,8 +51,14 @@ public class CreateContact extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_contact);
         findviews();
+        birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showDatePickerDialog();
+            }
+        });
         favmark=false;
-
+        photo.setImageResource(R.drawable.ic_personbig);
         if(getIntent().getSerializableExtra("contacto")!=null){
             contact= (Contact) getIntent().getSerializableExtra("contacto");
             settextviews();
@@ -104,7 +119,8 @@ public class CreateContact extends AppCompatActivity {
         changeimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(CreateContact.this, getString(R.string.changetoselect), Toast.LENGTH_SHORT).show();
+                selectImage();
             }
         });
 
@@ -120,6 +136,7 @@ public class CreateContact extends AppCompatActivity {
         btnadd=findViewById(R.id.btnadd);
         btnfav=findViewById(R.id.favchecker);
         changeimage=findViewById(R.id.btnchangeimage);
+        birthday=findViewById(R.id.edit_text_birthday);
     }
     public Contact setValues(){
         Contact contact=new Contact();
@@ -153,4 +170,64 @@ public class CreateContact extends AppCompatActivity {
         }
 
     }
+    private void selectImage() {
+        final CharSequence[] items = {
+                getString(R.string.selectphotog),
+                getString(R.string.cancel)
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.title_selection));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+//                if (items[item].equals(getString(R.string.selectphoto))) {
+//                    File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    startActivityForResult(intent, 8);  }else{
+                 if (items[item].equals(getString(R.string.selectphotog))) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, getString(R.string.title_selection)),
+                            8);
+                } else if (items[item].equals(getString(R.string.cancel))) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 8 && resultCode == RESULT_OK) {
+            Uri selectedImageURI = data.getData();
+            contact.setImg(selectedImageURI.toString());
+
+            Glide.with(this).load(new File(ImageURI.getRealPathFromURI(this, selectedImageURI))).apply(RequestOptions.overrideOf(150, 150)).into(photo);
+            photo.setImageURI(selectedImageURI);
+            Toast.makeText(this, getString(R.string.selectionmade), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        return image
+//private void showDatePickerDialog() {
+//    DatePickerFragment newFragment = new DatePickerFragment();
+//    newFragment.show(getActivity().getSupportFragmentManager(), "datePicker")
+//}
 }

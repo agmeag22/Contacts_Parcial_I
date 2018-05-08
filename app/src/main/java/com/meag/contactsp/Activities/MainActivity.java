@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 //            transition.addToBackStack(null);
 //            transition.commit();
             }
-            } else{
+        } else{
             onRestoreInstanceState(savedInstanceState);
         }
 
@@ -435,7 +435,23 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                     adapterContact.notifyDataSetChanged();
                 }
             }
+            if (resultCode == 3) {
+                int index = -1;
+                Contact edited_contact = (Contact) data.getSerializableExtra("edited_contact");
+                if (tabLayout.getSelectedTabPosition() == 1) {
+                    index = (int) data.getIntExtra("index", -1);
+                    int index2 = contactList.indexOf(adapterContactfav.contactlist.get(index));
+                    adapterContactfav.contactlist.set(index,edited_contact);
+                    adapterContactfav.notifyItemChanged(index);
+                    contactList.set(index2,edited_contact);
+                } else {
+                    index = (int) data.getIntExtra("index", -1);
+                    contactList.set(index,edited_contact);
+                    adapterContact.notifyItemChanged(index);
+                }
+            }
         }
+
     }
 
 
@@ -488,6 +504,3 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         return favcontactlist;
     }
 }
-
-
-

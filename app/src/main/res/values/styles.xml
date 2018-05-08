@@ -37,9 +37,15 @@
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:background">@color/cardview_shadow_start_color</item>
+        <item name="android:background">#bd544f4f</item>
         <item name="android:textColor">#fff</item>
-
+        <item name="android:imeOptions">flagNoExtractUi</item>
     </style>
-
+    <style name="CustomforTextview">
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

@@ -20,4 +20,10 @@
     <string name="birthday">Birthday:</string>
     <string name="emailtext">Email:</string>
     <string name="addresstext">Address:</string>
+    <string name="selectphotog">Select from Gallery</string>
+    <string name="cancel">cancel</string>
+    <string name="title_selection">Selection:</string>
+    <string name="selectionmade">Image Selected</string>
+    <string name="changetoselect">Pick an option</string>
+
 </resources>

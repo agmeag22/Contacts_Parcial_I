@@ -35,6 +35,7 @@ public class Description_Contact extends AppCompatActivity {
     private LinearLayout linearLayout, maindescriptionLayout;
     int index;
     int REQUEST_CODE_EDIT_CONTACT = 8;
+    private boolean contact_change=false;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -135,10 +136,25 @@ public class Description_Contact extends AppCompatActivity {
             birthday.setText(contact.getBirthdate().toString());
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(contact_change){
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("edited_contact", contact);
+            returnIntent.putExtra("index", index);
+            setResult(3,returnIntent);
+            finish();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQUEST_CODE_EDIT_CONTACT){
             if(resultCode==RESULT_OK){
+                contact_change = true;
                 contact= (Contact) data.getSerializableExtra("new_contact");
                 setViews();
             }
